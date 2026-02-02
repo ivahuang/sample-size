@@ -518,7 +518,7 @@
                 ib1.className = 'info-box ab-test';
                 ib1.innerHTML = '<strong>💡 公式：</strong>n<sub>对照</sub> = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) × (1+r)/r / δ²，n<sub>实验</sub> = r × n<sub>对照</sub><br><strong>理论假设：</strong>独立样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。r=1时总样本量最小。';
                 ib2.className = 'info-box ab-test';
-                ib2.innerHTML = '<strong>💡 公式：</strong>MDE = (Z<sub>α/2</sub>+Z<sub>β</sub>) × √(p(1-p) × (1/n<sub>对照</sub> + 1/n<sub>实验</sub>))<br><strong>理论假设：</strong>独立样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。';
+                ib2.innerHTML = '<strong>💡 公式：</strong>MDE = (Z<sub>α/2</sub>+Z<sub>β</sub>) × √(p(1-p) × (1/n<sub>对照</sub> + 1/n<sub>实验</sub>))<br><strong>理论假设：</strong>独立样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。r=1时总样本量最小。';
             } else {
                 ib1.className = 'info-box';
                 ib1.innerHTML = '<strong>💡 公式：</strong>n = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) / δ²<br><strong>理论假设：</strong>配对样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。';
