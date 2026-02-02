@@ -1688,8 +1688,8 @@
         function calculatePrecision() {
             const globalP = (parseFloat(document.getElementById('global-p-2').value) || 0) / 100;
             const globalN = parseInt(document.getElementById('global-n-2').value) || 0;
-            const alpha = parseFloat(document.getElementById('alpha-2').value) || 0.1;
-            const power = parseFloat(document.getElementById('power-2').value) || 0.8;
+            const alpha = parseFloat(document.getElementById('alpha-2').value) || 0.2;
+            const power = parseFloat(document.getElementById('power-2').value) || 0.6;
 
             if (globalP <= 0 || globalP >= 1) {
                 alert('请输入有效的总体观测目标 p (0-100%)');
