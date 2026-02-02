@@ -282,11 +282,11 @@
                     </div>
                     <div class="form-group">
                         <label>显著性水平 α <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。α=0.1表示有10%概率在无真实波动时误报。常用0.05或0.1，最宽松允许0.2。">ⓘ</span></label>
-                        <input type="number" id="alpha" value="0.1" step="0.01" min="0.01" max="0.2">
+                        <input type="number" id="alpha" value="0.2" step="0.01" min="0.01" max="0.2">
                     </div>
                     <div class="form-group">
                         <label>统计功效 (1-β) <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。Power=0.8表示有80%概率检测到真实波动。常用0.7-0.8，最低允许0.6。">ⓘ</span></label>
-                        <input type="number" id="power" value="0.8" step="0.01" min="0.6" max="0.99">
+                        <input type="number" id="power" value="0.6" step="0.01" min="0.6" max="0.99">
                     </div>
                     <div class="form-group" id="ratio-group-1" style="display: none;">
                         <label>分配比例 r (实验/对照) <span class="tooltip" data-tip="实验组与对照组的样本量比例。r=1表示1:1分配（最高效）；r=0.5表示实验组是对照组的一半；r=2表示实验组是对照组的两倍。偏离1:1会增加总样本量需求。">ⓘ</span></label>
@@ -380,7 +380,7 @@
                     </div>
                     <div class="form-group">
                         <label>显著性水平 α <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。">ⓘ</span></label>
-                        <input type="number" id="alpha-2" value="0.1" step="0.01" min="0.01" max="0.2">
+                        <input type="number" id="alpha-2" value="0.2" step="0.01" min="0.01" max="0.2">
                     </div>
                     <div class="form-group">
                         <label>统计功效 (1-β) <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。">ⓘ</span></label>
