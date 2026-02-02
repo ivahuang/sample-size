@@ -516,7 +516,7 @@
             const ib1 = document.getElementById('info-box-1'), ib2 = document.getElementById('info-box-2');
             if (currentScenario === 'ab-test') {
                 ib1.className = 'info-box ab-test';
-                ib1.innerHTML = '<strong>💡 公式：</strong>n<sub>对照</sub> = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) × (1+r)/r / δ²，n<sub>实验</sub> = r × n<sub>对照</sub><br><strong>理论假设：</strong>独立样本（实验组与对照组相互独立），方差叠加需×√2。r=1时总样本量最小。';
+                ib1.innerHTML = '<strong>💡 公式：</strong>n<sub>对照</sub> = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) × (1+r)/r / δ²，n<sub>实验</sub> = r × n<sub>对照</sub><br><strong>理论假设：</strong>独立样本。r=1时总样本量最小。';
                 ib2.className = 'info-box ab-test';
                 ib2.innerHTML = '<strong>💡 公式：</strong>MDE = (Z<sub>α/2</sub>+Z<sub>β</sub>) × √(p(1-p) × (1/n<sub>对照</sub> + 1/n<sub>实验</sub>))<br><strong>理论假设：</strong>独立样本。';
             } else {
@@ -585,8 +585,8 @@
         function calculateSampleSize() {
             const globalP = (parseFloat(document.getElementById('global-p').value)||0)/100;
             const globalDelta = (parseFloat(document.getElementById('global-delta').value)||0)/100;
-            const alpha = parseFloat(document.getElementById('alpha').value)||0.1;
-            const power = parseFloat(document.getElementById('power').value)||0.8;
+            const alpha = parseFloat(document.getElementById('alpha').value)||0.2;
+            const power = parseFloat(document.getElementById('power').value)||0.6;
             const ratio = parseFloat(document.getElementById('ratio').value)||1;
 
             if (globalP<=0 || globalP>=1) { alert('请输入有效的总体观测目标 p (0-100%)'); return; }
@@ -697,8 +697,8 @@
 
         function resetForm() {
             ['global-p','global-delta'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('alpha').value = '0.1';
-            document.getElementById('power').value = '0.8';
+            document.getElementById('alpha').value = '0.2';
+            document.getElementById('power').value = '0.6';
             document.getElementById('ratio').value = '1';
             PAGES.forEach(id => {
                 document.getElementById(`page-${id}`).checked = false;
