@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AB Test 最小样本量计算器</title>
+    <title>最小样本量计算器</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -50,9 +50,59 @@
             padding: 48px 24px;
         }
 
+        /* Scenario Switch - Top Left */
+        .scenario-switch {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .scenario-btn {
+            padding: 10px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .scenario-btn.active {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            color: white;
+        }
+
+        .scenario-btn.active.ab-test {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+        }
+
+        .scenario-btn:hover:not(.active) {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .scenario-icon {
+            font-size: 1.1rem;
+        }
+
         header {
             text-align: center;
             margin-bottom: 48px;
+            padding-top: 20px;
         }
 
         h1 {
@@ -70,6 +120,30 @@
             color: var(--text-secondary);
             font-size: 1rem;
             font-weight: 300;
+        }
+
+        /* Scenario Badge */
+        .scenario-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+
+        .scenario-badge.monitoring {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .scenario-badge.ab-test {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         /* Mode Switch */
@@ -225,15 +299,17 @@
             padding: 12px 16px;
             border-radius: 10px;
             font-size: 0.75rem;
+            font-weight: 400;
             opacity: 0;
             visibility: hidden;
             transition: all 0.2s;
             z-index: 100;
             border: 1px solid var(--border-color);
-            max-width: 300px;
+            width: 280px;
+            min-width: 280px;
             white-space: normal;
             text-align: left;
-            line-height: 1.5;
+            line-height: 1.6;
             box-shadow: var(--shadow);
         }
 
@@ -659,6 +735,15 @@
             color: var(--accent-cyan);
         }
 
+        .info-box.ab-test {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .info-box.ab-test strong {
+            color: var(--accent-orange);
+        }
+
         /* Formula display */
         .formula-display {
             background: var(--bg-tertiary);
@@ -718,6 +803,19 @@
         @media (max-width: 768px) {
             .container {
                 padding: 24px 16px;
+                padding-top: 80px;
+            }
+
+            .scenario-switch {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                justify-content: center;
+            }
+
+            .scenario-btn {
+                padding: 8px 12px;
+                font-size: 0.75rem;
             }
 
             h1 {
@@ -744,14 +842,37 @@
             .result-value {
                 font-size: 2.2rem;
             }
+
+            .tooltip::after {
+                left: 0;
+                transform: translateX(0);
+                width: 220px;
+                min-width: 220px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Scenario Switch - Top Left -->
+    <div class="scenario-switch">
+        <button class="scenario-btn active" data-scenario="monitoring" onclick="switchScenario('monitoring')">
+            <span class="scenario-icon">📈</span>
+            长期观测
+        </button>
+        <button class="scenario-btn" data-scenario="ab-test" onclick="switchScenario('ab-test')">
+            <span class="scenario-icon">🧪</span>
+            AB 测试
+        </button>
+    </div>
+
     <div class="container">
         <header>
-            <h1>📊 AB Test 最小样本量计算器</h1>
-            <p class="subtitle">基于二项分布的加权页面样本量估算工具 · URS/UPS 波动检测</p>
+            <h1>📊 <span id="page-title">长期观测</span>最小样本量计算器</h1>
+            <p class="subtitle">基于二项分布的加权页面样本量估算工具</p>
+            <div class="scenario-badge monitoring" id="scenario-badge">
+                <span>📈</span>
+                <span>配对样本假设</span>
+            </div>
         </header>
 
         <!-- Mode Switch -->
@@ -783,7 +904,7 @@
                     <div class="form-group">
                         <label>
                             总体观测目标 p
-                            <span class="tooltip" data-tip="总体的预期比例值，例如：URS分数(6-7分占比)、lose率、某原因占比等。填写0-100之间的百分比数值">ⓘ</span>
+                            <span class="tooltip" data-tip="总体的预期比例值，例如：URS分数(6-7分占比)、lose率、某原因占比等。填写0-100之间的百分比数值。">ⓘ</span>
                         </label>
                         <div class="input-suffix" data-suffix="%">
                             <input type="number" id="global-p" placeholder="例如: 70" step="0.1" min="0" max="100">
@@ -791,8 +912,8 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            总体波动精度 δ
-                            <span class="tooltip" data-tip="你希望检测到的最小波动幅度。例如：想检测 1% 的波动（从70%变为71%或69%）">ⓘ</span>
+                            总体波动精度 δ (MDE)
+                            <span class="tooltip" data-tip="最小可检测效应(MDE)：希望检测到的最小波动幅度。例如想检测1%的波动（从70%变为71%或69%），则填写1。">ⓘ</span>
                         </label>
                         <div class="input-suffix" data-suffix="%">
                             <input type="number" id="global-delta" placeholder="例如: 1" step="0.1" min="0">
@@ -801,21 +922,22 @@
                     <div class="form-group">
                         <label>
                             显著性水平 α
-                            <span class="tooltip" data-tip="犯第一类错误的概率（假阳性）。α=0.1 表示有10%概率在无真实波动时误报。常用 0.05 或 0.1，最宽松允许 0.2">ⓘ</span>
+                            <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。α=0.1表示有10%概率在无真实波动时误报。常用0.05或0.1，最宽松允许0.2。">ⓘ</span>
                         </label>
                         <input type="number" id="alpha" value="0.1" step="0.01" min="0.01" max="0.2">
                     </div>
                     <div class="form-group">
                         <label>
                             统计功效 (1-β)
-                            <span class="tooltip" data-tip="在真实存在波动时，能检测到波动的概率。Power=0.8 表示有80%概率检测到真实波动。常用 0.7-0.8，最低允许 0.6">ⓘ</span>
+                            <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。Power=0.8表示有80%概率检测到真实波动。常用0.7-0.8，最低允许0.6。">ⓘ</span>
                         </label>
                         <input type="number" id="power" value="0.8" step="0.01" min="0.6" max="0.99">
                     </div>
                 </div>
-                <div class="info-box">
+                <div class="info-box" id="info-box-1">
                     <strong>💡 公式说明：</strong>n = (Z<sub>α/2</sub> + Z<sub>β</sub>)² × p(1-p) / δ²<br>
-                    α 越小、Power 越大，需要的样本量越多。最宽松设置允许 α=0.2, Power=0.6
+                    <strong>理论假设：</strong>配对样本（同一用户群体跨周期观测）。<br>
+                    α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。
                 </div>
             </div>
 
@@ -942,7 +1064,7 @@
                     <div class="form-group">
                         <label>
                             总体观测目标 p
-                            <span class="tooltip" data-tip="总体的预期比例值，例如：URS分数、lose率、某原因占比等">ⓘ</span>
+                            <span class="tooltip" data-tip="总体的预期比例值，例如：URS分数、lose率、某原因占比等。填写0-100之间的百分比数值。">ⓘ</span>
                         </label>
                         <div class="input-suffix" data-suffix="%">
                             <input type="number" id="global-p-2" placeholder="例如: 70" step="0.1" min="0" max="100">
@@ -951,24 +1073,28 @@
                     <div class="form-group">
                         <label>
                             总样本量（单组）
-                            <span class="tooltip" data-tip="当前可获得的单组总样本量。如果使用页面加权，此项可留空">ⓘ</span>
+                            <span class="tooltip" data-tip="当前可获得的单组总样本量。如果使用页面加权，此项可留空，系统会根据各页面样本量计算。">ⓘ</span>
                         </label>
                         <input type="number" id="global-n-2" placeholder="例如: 10000" step="1" min="0">
                     </div>
                     <div class="form-group">
                         <label>
                             显著性水平 α
-                            <span class="tooltip" data-tip="犯第一类错误的概率">ⓘ</span>
+                            <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。α=0.1表示有10%概率在无真实波动时误报。">ⓘ</span>
                         </label>
                         <input type="number" id="alpha-2" value="0.1" step="0.01" min="0.01" max="0.2">
                     </div>
                     <div class="form-group">
                         <label>
                             统计功效 (1-β)
-                            <span class="tooltip" data-tip="检测到真实效果的概率">ⓘ</span>
+                            <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。Power=0.8表示有80%概率检测到真实波动。">ⓘ</span>
                         </label>
                         <input type="number" id="power-2" value="0.8" step="0.01" min="0.6" max="0.99">
                     </div>
+                </div>
+                <div class="info-box" id="info-box-2">
+                    <strong>💡 公式说明：</strong>MDE = (Z<sub>α/2</sub> + Z<sub>β</sub>) × SE<br>
+                    <strong>理论假设：</strong>配对样本（同一用户群体跨周期观测）。
                 </div>
             </div>
 
@@ -1070,9 +1196,9 @@
                                     <th>页面 p</th>
                                     <th>样本量 n</th>
                                     <th>页面MDE</th>
-                                    <th>75% CI</th>
                                     <th>90% CI</th>
                                     <th>95% CI</th>
+                                    <th>99% CI</th>
                                 </tr>
                             </thead>
                             <tbody id="precision-results-body"></tbody>
@@ -1086,6 +1212,9 @@
     </div>
 
     <script>
+        // Current scenario: 'monitoring' (长期观测) or 'ab-test' (AB测试)
+        let currentScenario = 'monitoring';
+
         // Page names and full names
         const PAGE_INFO = {
             'L': { name: 'L', fullName: 'List 列表页' },
@@ -1099,9 +1228,9 @@
 
         // Z-scores for different confidence levels
         const Z_VALUES = {
-            0.75: 1.163,  // 75% CI - for comparing two periods at α=0.1
-            0.90: 1.645,  // 90% CI
-            0.95: 1.960   // 95% CI
+            0.90: 1.645,
+            0.95: 1.960,
+            0.99: 2.576
         };
 
         // Normal distribution inverse CDF approximation
@@ -1157,33 +1286,44 @@
         }
 
         /**
-         * Calculate minimum sample size for binomial proportion
-         * Formula: n = (Z_α/2 + Z_β)² × p(1-p) / δ²
-         * This is for single sample; the doc uses this formula
+         * 获取样本量乘数
+         * - 长期观测（配对样本）：乘数 = 1
+         * - AB测试（独立样本）：乘数 = 2
+         */
+        function getSampleMultiplier() {
+            return currentScenario === 'ab-test' ? 2 : 1;
+        }
+
+        /**
+         * 计算最小样本量
+         * - 长期观测：n = (Z)² × p(1-p) / δ²
+         * - AB测试：n = 2 × (Z)² × p(1-p) / δ²
          */
         function calcMinSampleSize(p, delta, alpha, power) {
             const zAlpha = getZAlpha(alpha);
             const zBeta = getZBeta(power);
             const variance = p * (1 - p);
-            const n = Math.pow(zAlpha + zBeta, 2) * variance / Math.pow(delta, 2);
+            const multiplier = getSampleMultiplier();
+            const n = multiplier * Math.pow(zAlpha + zBeta, 2) * variance / Math.pow(delta, 2);
             return Math.ceil(n);
         }
 
         /**
-         * Calculate precision (MDE/detectable delta) from sample size
-         * Formula: δ = (Z_α/2 + Z_β) × √(p(1-p)/n)
+         * 根据样本量反推可检测精度MDE
+         * - 长期观测：δ = (Z) × SE
+         * - AB测试：δ = (Z) × √2 × SE
          */
         function calcPrecision(p, n, alpha, power) {
             const zAlpha = getZAlpha(alpha);
             const zBeta = getZBeta(power);
             const variance = p * (1 - p);
-            const delta = (zAlpha + zBeta) * Math.sqrt(variance / n);
+            const multiplier = currentScenario === 'ab-test' ? Math.sqrt(2) : 1;
+            const delta = (zAlpha + zBeta) * multiplier * Math.sqrt(variance / n);
             return delta;
         }
 
         /**
-         * Calculate CI half-width at given confidence level
-         * Formula: CI = Z × √(p(1-p)/n)
+         * 计算CI半宽（单组估计，不受场景影响）
          */
         function calcCIHalfWidth(p, n, confidence) {
             const z = Z_VALUES[confidence] || normInv(1 - (1 - confidence) / 2);
@@ -1191,10 +1331,7 @@
         }
 
         /**
-         * Calculate weighted SE for total URS
-         * Formula: SE_total = √(Σ (DAU_i² × p_i(1-p_i) / n_i)) / Σ(DAU)
-         * Simplified: SE_total = √(Σ (w_i² × p_i(1-p_i) / n_i))
-         * where w_i = DAU_i / Σ(DAU)
+         * 计算加权SE
          */
         function calcWeightedSE(pages) {
             let sumVariance = 0;
@@ -1206,11 +1343,76 @@
         }
 
         /**
-         * Calculate total minimum sample size using the simple formula
-         * n_total = (Z_α/2 + Z_β)² × p_total(1-p_total) / δ_total²
+         * 切换场景（长期观测 / AB测试）
          */
-        function calcTotalMinSampleSizeSimple(pTotal, deltaTotal, alpha, power) {
-            return calcMinSampleSize(pTotal, deltaTotal, alpha, power);
+        function switchScenario(scenario) {
+            currentScenario = scenario;
+            
+            // Update scenario buttons
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.remove('active', 'ab-test');
+                if (btn.dataset.scenario === scenario) {
+                    btn.classList.add('active');
+                    if (scenario === 'ab-test') {
+                        btn.classList.add('ab-test');
+                    }
+                }
+            });
+
+            // Update page title
+            document.getElementById('page-title').textContent = 
+                scenario === 'ab-test' ? 'AB 测试 ' : '长期观测 ';
+
+            // Update scenario badge
+            const badge = document.getElementById('scenario-badge');
+            if (scenario === 'ab-test') {
+                badge.className = 'scenario-badge ab-test';
+                badge.innerHTML = '<span>🧪</span><span>独立样本假设</span>';
+            } else {
+                badge.className = 'scenario-badge monitoring';
+                badge.innerHTML = '<span>📈</span><span>配对样本假设</span>';
+            }
+
+            // Update info boxes
+            updateInfoBoxes();
+
+            // Hide results (need to recalculate)
+            document.getElementById('results-sample').classList.remove('visible');
+            document.getElementById('results-precision').classList.remove('visible');
+        }
+
+        /**
+         * 更新说明框内容
+         */
+        function updateInfoBoxes() {
+            const infoBox1 = document.getElementById('info-box-1');
+            const infoBox2 = document.getElementById('info-box-2');
+
+            if (currentScenario === 'ab-test') {
+                infoBox1.className = 'info-box ab-test';
+                infoBox1.innerHTML = `
+                    <strong>💡 公式说明：</strong>n = 2 × (Z<sub>α/2</sub> + Z<sub>β</sub>)² × p(1-p) / δ²<br>
+                    <strong>理论假设：</strong>独立样本（实验组与对照组相互独立），方差叠加需×2。<br>
+                    α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。
+                `;
+                infoBox2.className = 'info-box ab-test';
+                infoBox2.innerHTML = `
+                    <strong>💡 公式说明：</strong>MDE = (Z<sub>α/2</sub> + Z<sub>β</sub>) × √2 × SE<br>
+                    <strong>理论假设：</strong>独立样本（实验组与对照组相互独立），方差叠加需×√2。
+                `;
+            } else {
+                infoBox1.className = 'info-box';
+                infoBox1.innerHTML = `
+                    <strong>💡 公式说明：</strong>n = (Z<sub>α/2</sub> + Z<sub>β</sub>)² × p(1-p) / δ²<br>
+                    <strong>理论假设：</strong>配对样本（同一用户群体跨周期观测）。<br>
+                    α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。
+                `;
+                infoBox2.className = 'info-box';
+                infoBox2.innerHTML = `
+                    <strong>💡 公式说明：</strong>MDE = (Z<sub>α/2</sub> + Z<sub>β</sub>) × SE<br>
+                    <strong>理论假设：</strong>配对样本（同一用户群体跨周期观测）。
+                `;
+            }
         }
 
         // Generate page config HTML
@@ -1226,14 +1428,14 @@
                         <div class="form-group">
                             <label>
                                 页面权重 w
-                                <span class="tooltip" data-tip="该页面的权重。所有页面权重之和应为1。例如0.35表示该页面占35%权重">ⓘ</span>
+                                <span class="tooltip" data-tip="该页面的权重，所有页面权重之和应为1。例如0.35表示该页面占35%权重。">ⓘ</span>
                             </label>
                             <input type="number" id="${pageId}-weight${suffix}" placeholder="例如: 0.35" step="0.01" min="0" max="1">
                         </div>
                         <div class="form-group">
                             <label>
                                 页面 p 值
-                                <span class="tooltip" data-tip="该页面的预估比例值（如URS分数、lose率、原因占比等）">ⓘ</span>
+                                <span class="tooltip" data-tip="该页面的预估比例值（如URS分数、lose率、原因占比等），填写0-100之间的百分比。">ⓘ</span>
                             </label>
                             <div class="input-suffix" data-suffix="%">
                                 <input type="number" id="${pageId}-p${suffix}" placeholder="例如: 70" step="0.1" min="0" max="100">
@@ -1242,7 +1444,7 @@
                         <div class="form-group">
                             <label>
                                 ${mode === 1 ? '预估' : '实际'}样本量 n
-                                <span class="tooltip" data-tip="${mode === 1 ? '该页面预计能获得的样本数量（可选，用于判断是否达标）' : '该页面实际已收集的样本数量'}">ⓘ</span>
+                                <span class="tooltip" data-tip="${mode === 1 ? '该页面预计能获得的样本数量（可选），用于判断是否达标。' : '该页面实际已收集的样本数量。'}">ⓘ</span>
                             </label>
                             <input type="number" id="${pageId}-n${suffix}" placeholder="例如: 5000" step="1" min="0">
                         </div>
@@ -1288,7 +1490,6 @@
 
         // Apply preset (Mode 1)
         function applyPreset(preset) {
-            // Clear all first
             PAGES.forEach(p => {
                 document.getElementById(`page-${p}`).checked = false;
                 document.getElementById(`config-${p}`).classList.remove('active');
@@ -1306,7 +1507,6 @@
                 document.getElementById('config-B').classList.add('active');
             }
             
-            // Update preset button states
             document.querySelectorAll('#mode-precision-to-sample .preset-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -1342,16 +1542,14 @@
             }
         }
 
-        // Get selected pages and their parameters (Mode 1)
+        // Get selected pages (Mode 1)
         function getSelectedPages() {
             const pages = [];
-            
             for (const id of PAGES) {
                 if (document.getElementById(`page-${id}`).checked) {
                     const weight = parseFloat(document.getElementById(`${id}-weight`).value) || 0;
                     const p = (parseFloat(document.getElementById(`${id}-p`).value) || 0) / 100;
                     const n = parseInt(document.getElementById(`${id}-n`).value) || 0;
-                    
                     pages.push({ id, name: id, w: weight, p, n });
                 }
             }
@@ -1361,13 +1559,11 @@
         // Get selected pages (Mode 2)
         function getSelectedPages2() {
             const pages = [];
-            
             for (const id of PAGES) {
                 if (document.getElementById(`page-${id}-2`).checked) {
                     const weight = parseFloat(document.getElementById(`${id}-weight-2`).value) || 0;
                     const p = (parseFloat(document.getElementById(`${id}-p-2`).value) || 0) / 100;
                     const n = parseInt(document.getElementById(`${id}-n-2`).value) || 0;
-                    
                     pages.push({ id, name: id, w: weight, p, n });
                 }
             }
@@ -1381,7 +1577,6 @@
             const alpha = parseFloat(document.getElementById('alpha').value) || 0.1;
             const power = parseFloat(document.getElementById('power').value) || 0.8;
 
-            // Validate inputs
             if (globalP <= 0 || globalP >= 1) {
                 alert('请输入有效的总体观测目标 p (0-100%)');
                 return;
@@ -1410,21 +1605,21 @@
 
             const zAlpha = getZAlpha(alpha);
             const zBeta = getZBeta(power);
+            const multiplier = getSampleMultiplier();
+            const scenarioName = currentScenario === 'ab-test' ? '独立样本' : '配对样本';
+            const multiplierText = currentScenario === 'ab-test' ? '2 × ' : '';
 
             if (pages.length === 0) {
-                // Simple case: no page weighting
                 totalSampleSize = calcMinSampleSize(globalP, globalDelta, alpha, power);
                 totalSampleSize = Math.max(totalSampleSize, 200);
                 
                 noteText = `基于总体 p=${(globalP*100).toFixed(1)}%, δ=${(globalDelta*100).toFixed(2)}%, α=${alpha}, Power=${power}`;
                 
-                formulaText = `<strong>公式：</strong>n = (Z<sub>α/2</sub> + Z<sub>β</sub>)² × p(1-p) / δ²<br>
-                    <strong>计算：</strong>n = (${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)})² × ${globalP.toFixed(3)} × ${(1-globalP).toFixed(3)} / ${globalDelta.toFixed(4)}²<br>
-                    <strong>结果：</strong>n = ${totalSampleSize.toLocaleString()} (每页面至少200)`;
+                formulaText = `<strong>公式：</strong>n = ${multiplierText}(Z<sub>α/2</sub> + Z<sub>β</sub>)² × p(1-p) / δ²（${scenarioName}假设）<br>
+                    <strong>计算：</strong>n = ${multiplierText}(${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)})² × ${globalP.toFixed(3)} × ${(1-globalP).toFixed(3)} / ${globalDelta.toFixed(4)}²<br>
+                    <strong>结果：</strong>n = ${totalSampleSize.toLocaleString()}（每组至少200）`;
 
             } else {
-                // Weighted case
-                // Validate weights
                 const validPages = pages.filter(p => p.w > 0 && p.p > 0);
                 if (validPages.length === 0) {
                     alert('请为选中的页面填写有效的权重和p值');
@@ -1432,18 +1627,12 @@
                 }
 
                 const weightSum = validPages.reduce((sum, p) => sum + p.w, 0);
-                
-                // Calculate total sample size using simple formula
-                totalSampleSize = calcTotalMinSampleSizeSimple(globalP, globalDelta, alpha, power);
+                totalSampleSize = calcMinSampleSize(globalP, globalDelta, alpha, power);
                 totalSampleSize = Math.max(totalSampleSize, 200);
 
-                // Calculate per-page results
-                // 页面波动精度 = 总波动精度 / 页面权重
                 let pageResults = [];
                 for (const page of validPages) {
-                    // 页面级波动 = 总波动 / 页面权重
                     const pageDelta = globalDelta / page.w;
-                    // 页面最小样本量
                     const pageMinN = calcMinSampleSize(page.p, pageDelta, alpha, power);
                     const adjustedMinN = Math.max(pageMinN, 200);
                     
@@ -1459,7 +1648,6 @@
                     });
                 }
 
-                // Build results table
                 for (const result of pageResults) {
                     const statusClass = result.status === 'sufficient' ? 'success-cell' : 
                                        result.status === 'insufficient' ? 'warning-cell' : '';
@@ -1481,12 +1669,12 @@
                 if (Math.abs(weightSum - 1) > 0.01) {
                     noteText = `⚠️ 注意：页面权重之和为 ${weightSum.toFixed(2)}，建议调整为1`;
                 } else {
-                    noteText = `基于加权计算：总精度=${(globalDelta*100).toFixed(2)}%, 页面精度=总精度/页面权重，每页面至少200样本`;
+                    noteText = `基于加权计算：总精度=${(globalDelta*100).toFixed(2)}%，页面精度=总精度/页面权重`;
                 }
                 
-                formulaText = `<strong>总样本量公式：</strong>n<sub>total</sub> = (Z<sub>α/2</sub> + Z<sub>β</sub>)² × p<sub>total</sub>(1-p<sub>total</sub>) / δ<sub>total</sub>²<br>
-                    <strong>页面波动精度：</strong>δ<sub>page</sub> = δ<sub>total</sub> / w<sub>page</sub> （由加权公式 δ<sub>total</sub> = Σ(w<sub>i</sub> × δ<sub>i</sub>) 推导）<br>
-                    <strong>页面样本量：</strong>n<sub>page</sub> = (${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)})² × p<sub>page</sub>(1-p<sub>page</sub>) / δ<sub>page</sub>²`;
+                formulaText = `<strong>总样本量公式：</strong>n<sub>total</sub> = ${multiplierText}(Z<sub>α/2</sub> + Z<sub>β</sub>)² × p<sub>total</sub>(1-p<sub>total</sub>) / δ<sub>total</sub>²（${scenarioName}假设）<br>
+                    <strong>页面波动精度：</strong>δ<sub>page</sub> = δ<sub>total</sub> / w<sub>page</sub><br>
+                    <strong>页面样本量：</strong>n<sub>page</sub> = ${multiplierText}(${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)})² × p<sub>page</sub>(1-p<sub>page</sub>) / δ<sub>page</sub>²`;
             }
 
             document.getElementById('total-sample-size').textContent = totalSampleSize.toLocaleString();
@@ -1503,7 +1691,6 @@
             const alpha = parseFloat(document.getElementById('alpha-2').value) || 0.1;
             const power = parseFloat(document.getElementById('power-2').value) || 0.8;
 
-            // Validate
             if (globalP <= 0 || globalP >= 1) {
                 alert('请输入有效的总体观测目标 p (0-100%)');
                 return;
@@ -1516,50 +1703,44 @@
 
             let totalPrecision;
             let totalSE;
-            let totalCI75, totalCI90, totalCI95;
+            let totalCI90, totalCI95, totalCI99;
             let formulaText = '';
 
             const zAlpha = getZAlpha(alpha);
             const zBeta = getZBeta(power);
+            const seMultiplier = currentScenario === 'ab-test' ? Math.sqrt(2) : 1;
+            const seMultiplierText = currentScenario === 'ab-test' ? ' × √2' : '';
+            const scenarioName = currentScenario === 'ab-test' ? '独立样本' : '配对样本';
 
-            // Filter valid pages
             const validPages = pages.filter(p => p.w > 0 && p.p > 0 && p.n > 0);
 
             if (validPages.length === 0 && globalN > 0) {
-                // Simple case - no page weighting
                 totalPrecision = calcPrecision(globalP, globalN, alpha, power);
                 totalSE = Math.sqrt(globalP * (1 - globalP) / globalN);
-                totalCI75 = calcCIHalfWidth(globalP, globalN, 0.75);
                 totalCI90 = calcCIHalfWidth(globalP, globalN, 0.90);
                 totalCI95 = calcCIHalfWidth(globalP, globalN, 0.95);
+                totalCI99 = calcCIHalfWidth(globalP, globalN, 0.99);
 
-                formulaText = `<strong>SE公式：</strong>SE = √(p(1-p)/n) = √(${globalP.toFixed(3)} × ${(1-globalP).toFixed(3)} / ${globalN}) = ${(totalSE*100).toFixed(4)}%<br>
-                    <strong>MDE公式：</strong>δ = (Z<sub>α/2</sub> + Z<sub>β</sub>) × SE = (${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)}) × ${(totalSE*100).toFixed(4)}% = ${(totalPrecision*100).toFixed(3)}%<br>
-                    <strong>CI公式：</strong>CI半宽 = Z × SE（75% CI: Z=1.163, 90% CI: Z=1.645, 95% CI: Z=1.960）`;
+                formulaText = `<strong>SE公式：</strong>SE = √(p(1-p)/n) = ${(totalSE*100).toFixed(4)}%<br>
+                    <strong>MDE公式：</strong>δ = (Z<sub>α/2</sub> + Z<sub>β</sub>)${seMultiplierText} × SE = (${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)})${seMultiplierText} × ${(totalSE*100).toFixed(4)}% = ${(totalPrecision*100).toFixed(3)}%（${scenarioName}假设）<br>
+                    <strong>CI公式：</strong>CI半宽 = Z × SE（单组估计精度）`;
 
             } else if (validPages.length > 0) {
-                // Weighted case
                 const weightSum = validPages.reduce((sum, p) => sum + p.w, 0);
 
-                // Calculate weighted SE using the document formula:
-                // SE_total = √(Σ (w_i² × p_i(1-p_i) / n_i))
                 totalSE = calcWeightedSE(validPages);
+                totalPrecision = (zAlpha + zBeta) * seMultiplier * totalSE;
                 
-                // MDE from weighted SE
-                totalPrecision = (zAlpha + zBeta) * totalSE;
-                
-                // CI half-widths for total (using weighted SE)
-                totalCI75 = Z_VALUES[0.75] * totalSE;
                 totalCI90 = Z_VALUES[0.90] * totalSE;
                 totalCI95 = Z_VALUES[0.95] * totalSE;
+                totalCI99 = Z_VALUES[0.99] * totalSE;
 
-                // Per-page results
                 for (const page of validPages) {
                     const pageSE = Math.sqrt(page.p * (1 - page.p) / page.n);
-                    const pagePrecision = (zAlpha + zBeta) * pageSE;
-                    const pageCI75 = calcCIHalfWidth(page.p, page.n, 0.75);
+                    const pagePrecision = (zAlpha + zBeta) * seMultiplier * pageSE;
                     const pageCI90 = calcCIHalfWidth(page.p, page.n, 0.90);
                     const pageCI95 = calcCIHalfWidth(page.p, page.n, 0.95);
+                    const pageCI99 = calcCIHalfWidth(page.p, page.n, 0.99);
 
                     tbody.innerHTML += `
                         <tr>
@@ -1568,9 +1749,9 @@
                             <td>${(page.p * 100).toFixed(1)}%</td>
                             <td>${page.n.toLocaleString()}</td>
                             <td class="highlight-cell">±${(pagePrecision * 100).toFixed(2)}%</td>
-                            <td>±${(pageCI75 * 100).toFixed(2)}%</td>
                             <td>±${(pageCI90 * 100).toFixed(2)}%</td>
                             <td>±${(pageCI95 * 100).toFixed(2)}%</td>
+                            <td>±${(pageCI99 * 100).toFixed(2)}%</td>
                         </tr>
                     `;
                 }
@@ -1580,29 +1761,22 @@
                     weightNote = `<br><strong>⚠️ 注意：</strong>页面权重之和为 ${weightSum.toFixed(2)}，建议调整为1`;
                 }
 
-                formulaText = `<strong>加权SE公式：</strong>SE<sub>total</sub> = √(Σ w<sub>i</sub>² × p<sub>i</sub>(1-p<sub>i</sub>) / n<sub>i</sub>)<br>
-                    <strong>总体MDE：</strong>δ<sub>total</sub> = (Z<sub>α/2</sub> + Z<sub>β</sub>) × SE<sub>total</sub> = (${zAlpha.toFixed(3)} + ${zBeta.toFixed(3)}) × ${(totalSE*100).toFixed(4)}%<br>
-                    <strong>页面SE：</strong>SE<sub>page</sub> = √(p<sub>page</sub>(1-p<sub>page</sub>) / n<sub>page</sub>)<br>
-                    <strong>CI公式：</strong>CI半宽 = Z × SE（使用75% CI比较两周数据时，等价于α=0.1的显著性检验）${weightNote}`;
+                formulaText = `<strong>加权SE公式：</strong>SE<sub>total</sub> = √(Σ w<sub>i</sub>² × p<sub>i</sub>(1-p<sub>i</sub>) / n<sub>i</sub>) = ${(totalSE*100).toFixed(4)}%<br>
+                    <strong>总体MDE：</strong>δ<sub>total</sub> = (Z<sub>α/2</sub> + Z<sub>β</sub>)${seMultiplierText} × SE<sub>total</sub>（${scenarioName}假设）<br>
+                    <strong>页面MDE：</strong>δ<sub>page</sub> = (Z<sub>α/2</sub> + Z<sub>β</sub>)${seMultiplierText} × SE<sub>page</sub>${weightNote}`;
 
             } else {
                 alert('请输入总样本量或选择并配置页面参数');
                 return;
             }
 
-            // Update total precision display
             document.getElementById('total-precision').innerHTML = 
                 `±${(totalPrecision * 100).toFixed(2)}<span class="result-unit">%</span>`;
             document.getElementById('result-alpha').textContent = alpha;
             document.getElementById('result-power').textContent = power;
 
-            // Update CI grid
             const ciGrid = document.getElementById('total-ci-grid');
             ciGrid.innerHTML = `
-                <div class="ci-card primary">
-                    <div class="ci-level">75% 置信区间</div>
-                    <div class="ci-value">±${(totalCI75 * 100).toFixed(2)}%</div>
-                </div>
                 <div class="ci-card">
                     <div class="ci-level">90% 置信区间</div>
                     <div class="ci-value">±${(totalCI90 * 100).toFixed(2)}%</div>
@@ -1610,6 +1784,10 @@
                 <div class="ci-card">
                     <div class="ci-level">95% 置信区间</div>
                     <div class="ci-value">±${(totalCI95 * 100).toFixed(2)}%</div>
+                </div>
+                <div class="ci-card primary">
+                    <div class="ci-level">99% 置信区间</div>
+                    <div class="ci-value">±${(totalCI99 * 100).toFixed(2)}%</div>
                 </div>
             `;
 
@@ -1663,6 +1841,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initPageConfigs();
+            updateInfoBoxes();
         });
     </script>
 </body>
