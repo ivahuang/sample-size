@@ -1574,8 +1574,8 @@
         function calculateSampleSize() {
             const globalP = (parseFloat(document.getElementById('global-p').value) || 0) / 100;
             const globalDelta = (parseFloat(document.getElementById('global-delta').value) || 0) / 100;
-            const alpha = parseFloat(document.getElementById('alpha').value) || 0.1;
-            const power = parseFloat(document.getElementById('power').value) || 0.8;
+            const alpha = parseFloat(document.getElementById('alpha').value) || 0.2;
+            const power = parseFloat(document.getElementById('power').value) || 0.6;
 
             if (globalP <= 0 || globalP >= 1) {
                 alert('请输入有效的总体观测目标 p (0-100%)');
@@ -1799,8 +1799,8 @@
         function resetForm() {
             document.getElementById('global-p').value = '';
             document.getElementById('global-delta').value = '';
-            document.getElementById('alpha').value = '0.1';
-            document.getElementById('power').value = '0.8';
+            document.getElementById('alpha').value = '0.2';
+            document.getElementById('power').value = '0.6';
             
             PAGES.forEach(id => {
                 document.getElementById(`page-${id}`).checked = false;
@@ -1821,7 +1821,7 @@
             document.getElementById('global-p-2').value = '';
             document.getElementById('global-n-2').value = '';
             document.getElementById('alpha-2').value = '0.1';
-            document.getElementById('power-2').value = '0.8';
+            document.getElementById('power-2').value = '0.6';
             
             PAGES.forEach(id => {
                 document.getElementById(`page-${id}-2`).checked = false;
