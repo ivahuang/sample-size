@@ -27,15 +27,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.7;
-            background-image: 
-                radial-gradient(ellipse at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; line-height: 1.7;
+            background-image: radial-gradient(ellipse at 10% 20%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                              radial-gradient(ellipse at 90% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+        
+        /* Scenario Switch */
         .scenario-switch {
             position: fixed; top: 20px; left: 20px; z-index: 1000;
             display: flex; background: var(--bg-secondary); border-radius: 12px;
@@ -44,40 +43,42 @@
         .scenario-btn {
             padding: 10px 18px; border: none; background: transparent;
             color: var(--text-secondary); font-size: 0.85rem; font-family: inherit;
-            cursor: pointer; border-radius: 8px; transition: all 0.25s ease;
-            display: flex; align-items: center; gap: 8px; font-weight: 500; white-space: nowrap;
+            cursor: pointer; border-radius: 8px; transition: all 0.25s;
+            display: flex; align-items: center; gap: 8px; font-weight: 500;
         }
         .scenario-btn.active { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); color: white; }
         .scenario-btn.active.ab-test { background: linear-gradient(135deg, var(--accent-orange), var(--accent-red)); }
         .scenario-btn:hover:not(.active) { background: var(--bg-tertiary); color: var(--text-primary); }
+        
         header { text-align: center; margin-bottom: 48px; padding-top: 20px; }
         h1 {
-            font-size: 2.25rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px;
+            font-size: 2.25rem; font-weight: 700; margin-bottom: 12px;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .subtitle { color: var(--text-secondary); font-size: 1rem; font-weight: 300; }
+        .subtitle { color: var(--text-secondary); font-size: 1rem; }
         .scenario-badge {
             display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
             border-radius: 20px; font-size: 0.8rem; font-weight: 500; margin-top: 12px;
         }
-        .scenario-badge.monitoring { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .scenario-badge.ab-test { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .scenario-badge.monitoring { background: rgba(16,185,129,0.15); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3); }
+        .scenario-badge.ab-test { background: rgba(245,158,11,0.15); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.3); }
+        
+        /* Mode Switch */
         .mode-switch { display: flex; justify-content: center; margin-bottom: 36px; }
-        .switch-container {
-            display: inline-flex; background: var(--bg-secondary); border-radius: 14px;
-            padding: 5px; border: 1px solid var(--border-color); box-shadow: var(--shadow);
-        }
+        .switch-container { display: inline-flex; background: var(--bg-secondary); border-radius: 14px; padding: 5px; border: 1px solid var(--border-color); }
         .switch-btn {
             padding: 14px 28px; border: none; background: transparent; color: var(--text-secondary);
             font-size: 0.9rem; font-family: inherit; cursor: pointer; border-radius: 10px;
-            transition: all 0.25s ease; display: flex; align-items: center; gap: 10px; font-weight: 500;
+            transition: all 0.25s; display: flex; align-items: center; gap: 10px; font-weight: 500;
         }
-        .switch-btn.active { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; box-shadow: var(--glow-blue); }
-        .switch-btn:hover:not(.active) { background: var(--bg-tertiary); color: var(--text-primary); }
+        .switch-btn.active { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; }
+        .switch-btn:hover:not(.active) { background: var(--bg-tertiary); }
+        
+        /* Card */
         .card {
             background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;
-            padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+            padding: 32px; margin-bottom: 24px; position: relative; overflow: visible;
         }
         .card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -90,53 +91,78 @@
         .card-icon.purple { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2)); }
         .card-title { font-size: 1.15rem; font-weight: 600; }
         .card-desc { font-size: 0.8rem; color: var(--text-secondary); margin-top: 3px; }
+        
+        /* Form */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .tooltip { position: relative; cursor: help; color: var(--accent-cyan); }
+        .form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        
+        /* Tooltip - 智能定位 */
+        .tooltip { position: relative; cursor: help; color: var(--accent-cyan); display: inline-flex; }
         .tooltip::after {
-            content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%;
-            transform: translateX(-50%); background: var(--bg-tertiary); color: var(--text-primary);
+            content: attr(data-tip); position: absolute;
+            bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--bg-primary); color: var(--text-primary);
             padding: 12px 16px; border-radius: 10px; font-size: 0.75rem; font-weight: 400;
-            opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100;
-            border: 1px solid var(--border-color); width: 280px; min-width: 280px;
-            white-space: normal; text-align: left; line-height: 1.6; box-shadow: var(--shadow);
+            opacity: 0; visibility: hidden; transition: all 0.15s; z-index: 99999;
+            border: 1px solid var(--border-color); width: 240px;
+            white-space: normal; text-align: left; line-height: 1.6; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            pointer-events: none;
         }
         .tooltip:hover::after { opacity: 1; visibility: visible; }
+        /* 靠右的tooltip向左展开 */
+        .tooltip.tip-left::after { left: auto; right: -8px; transform: none; }
+        /* 靠左的tooltip向右展开 */
+        .tooltip.tip-right::after { left: -8px; right: auto; transform: none; }
+        
         input[type="number"] {
             background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px;
             padding: 12px 16px; color: var(--text-primary); font-size: 0.95rem;
-            font-family: 'JetBrains Mono', monospace; transition: all 0.2s; width: 100%;
+            font-family: 'JetBrains Mono', monospace; width: 100%;
         }
-        input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
         input::placeholder { color: var(--text-muted); }
         .input-suffix { position: relative; }
         .input-suffix input { padding-right: 44px; }
         .input-suffix::after {
             content: attr(data-suffix); position: absolute; right: 16px; top: 50%;
             transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;
-            pointer-events: none; font-family: 'JetBrains Mono', monospace;
         }
+        
+        /* Checkbox */
+        .checkbox-row { display: flex; align-items: center; gap: 10px; margin: 16px 0 8px; padding: 12px 16px; background: var(--bg-secondary); border-radius: 10px; }
+        .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-cyan); }
+        .checkbox-row label { margin: 0; cursor: pointer; font-size: 0.85rem; color: var(--text-secondary); }
+        
+        /* Two Column for AB */
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .column-box { background: var(--bg-secondary); border-radius: 14px; padding: 20px; border: 1px solid var(--border-color); }
+        .column-header { font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; padding: 8px 12px; border-radius: 8px; text-align: center; }
+        .column-header.control { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+        .column-header.treatment { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+        
+        /* Preset & Page */
         .preset-section { margin-bottom: 24px; }
         .preset-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; display: block; }
         .preset-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .preset-btn {
             padding: 10px 20px; background: var(--bg-secondary); border: 1px solid var(--border-color);
-            border-radius: 8px; color: var(--text-secondary); font-size: 0.85rem;
-            font-family: inherit; cursor: pointer; transition: all 0.2s;
+            border-radius: 8px; color: var(--text-secondary); font-size: 0.85rem; font-family: inherit; cursor: pointer;
         }
         .preset-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .preset-btn.active { background: rgba(6, 182, 212, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .preset-btn.active { background: rgba(6,182,212,0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        
         .page-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
         .page-checkbox { display: none; }
         .page-label {
             display: flex; flex-direction: column; align-items: center; padding: 16px 12px;
             background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px;
-            cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; user-select: none; text-align: center;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
         }
-        .page-label .page-full-name { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
-        .page-checkbox:checked + .page-label { background: rgba(59, 130, 246, 0.15); border-color: var(--accent-blue); color: var(--accent-blue); }
-        .page-label:hover { border-color: var(--text-muted); }
+        .page-label .page-full-name { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+        .page-checkbox:checked + .page-label { background: rgba(59,130,246,0.15); border-color: var(--accent-blue); color: var(--accent-blue); }
+        
         .page-configs { display: flex; flex-direction: column; gap: 16px; }
         .page-config { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px 24px; display: none; }
         .page-config.active { display: block; }
@@ -147,583 +173,858 @@
         .page-badge.B { background: rgba(245,158,11,0.2); color: #fbbf24; }
         .page-badge.O { background: rgba(139,92,246,0.2); color: #a78bfa; }
         .page-badge.M { background: rgba(236,72,153,0.2); color: #f472b6; }
-        .page-config .form-grid { grid-template-columns: repeat(3, 1fr); }
+        
+        /* Buttons */
         .btn {
             padding: 14px 32px; border: none; border-radius: 12px; font-size: 0.95rem;
             font-family: inherit; font-weight: 600; cursor: pointer; transition: all 0.25s;
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-blue), 0 8px 25px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-blue); }
         .btn-secondary { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: var(--bg-secondary); color: var(--text-primary); }
         .action-row { display: flex; gap: 14px; margin-top: 28px; justify-content: flex-end; }
+        
+        /* Results */
         .results-section { display: none; }
         .results-section.visible { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
         .result-summary {
             background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.12));
             border: 1px solid rgba(59,130,246,0.3); border-radius: 20px; padding: 36px;
-            margin-bottom: 28px; text-align: center; position: relative; overflow: hidden;
+            margin-bottom: 28px; text-align: center; position: relative;
         }
         .result-summary::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
         }
-        .result-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; }
+        .result-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; }
         .result-value {
             font-size: 3rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .result-unit { font-size: 1.2rem; color: var(--text-secondary); margin-left: 4px; -webkit-text-fill-color: var(--text-secondary); }
-        .result-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); line-height: 1.6; }
+        .result-unit { font-size: 1.2rem; -webkit-text-fill-color: var(--text-secondary); }
+        .result-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+        
         .ab-result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
         .ab-result-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; }
-        .ab-result-card.highlight { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
+        .ab-result-card.highlight { border-color: var(--accent-cyan); background: rgba(6,182,212,0.1); }
         .ab-result-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
-        .ab-result-value { font-size: 1.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); }
+        .ab-result-value { font-size: 1.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
         .ab-result-card.highlight .ab-result-value { color: var(--accent-cyan); }
+        
+        .ci-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+        .ci-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; }
+        .ci-level { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+        .ci-value { font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .ci-card.primary { border-color: var(--accent-blue); background: rgba(59,130,246,0.1); }
+        .ci-card.primary .ci-value { color: var(--accent-blue); }
+        
         .table-container { overflow-x: auto; margin-top: 20px; }
         .results-table { width: 100%; border-collapse: collapse; }
         .results-table th, .results-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .results-table th { background: var(--bg-secondary); font-weight: 600; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
-        .results-table th:first-child { border-radius: 10px 0 0 0; }
-        .results-table th:last-child { border-radius: 0 10px 0 0; }
+        .results-table th { background: var(--bg-secondary); font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
         .results-table td { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
-        .results-table tr:hover { background: rgba(59, 130, 246, 0.05); }
-        .page-name-cell { font-family: 'Noto Sans SC', sans-serif; font-weight: 600; }
         .highlight-cell { color: var(--accent-cyan); font-weight: 600; }
         .warning-cell { color: var(--accent-orange); }
         .success-cell { color: var(--accent-green); }
-        .ci-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 24px; }
-        .ci-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: center; }
-        .ci-level { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .ci-value { font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-        .ci-card.primary { border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
-        .ci-card.primary .ci-value { color: var(--accent-blue); }
-        .info-box { background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 12px; padding: 18px; margin-top: 20px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+        
+        .info-box { background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 12px; padding: 18px; margin-top: 20px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
         .info-box strong { color: var(--accent-cyan); }
-        .info-box.ab-test { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .info-box.ab-test { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
         .info-box.ab-test strong { color: var(--accent-orange); }
-        .formula-display { background: var(--bg-tertiary); border-radius: 12px; padding: 20px; margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary); overflow-x: auto; line-height: 1.8; border: 1px solid var(--border-color); }
+        
+        .formula-display { background: var(--bg-tertiary); border-radius: 12px; padding: 20px; margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.8; border: 1px solid var(--border-color); }
         .formula-display strong { color: var(--accent-purple); }
+        
         .section-title { font-size: 1rem; font-weight: 600; margin: 28px 0 18px; display: flex; align-items: center; gap: 10px; }
         .section-title::before { content: ''; width: 4px; height: 20px; background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple)); border-radius: 2px; }
+        
         @media (max-width: 768px) {
             .container { padding: 24px 16px; padding-top: 80px; }
             .scenario-switch { top: 10px; left: 10px; right: 10px; justify-content: center; }
-            .scenario-btn { padding: 8px 12px; font-size: 0.75rem; }
-            h1 { font-size: 1.6rem; }
-            .switch-btn { padding: 10px 16px; font-size: 0.8rem; }
-            .card { padding: 24px; }
-            .form-grid { grid-template-columns: 1fr 1fr; }
+            .form-grid, .two-column { grid-template-columns: 1fr; }
             .page-grid { grid-template-columns: repeat(3, 1fr); }
-            .page-config .form-grid { grid-template-columns: 1fr; }
-            .ci-grid { grid-template-columns: repeat(2, 1fr); }
-            .ab-result-grid { grid-template-columns: 1fr; }
+            .ab-result-grid, .ci-grid { grid-template-columns: 1fr; }
             .result-value { font-size: 2.2rem; }
-            .tooltip::after { left: 0; transform: translateX(0); width: 220px; min-width: 220px; }
+        }
+        
+        /* Watermark */
+        .watermark {
+            position: fixed; bottom: 16px; right: 20px; 
+            font-size: 0.7rem; color: var(--text-muted); opacity: 0.5;
+            font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.02em;
+            pointer-events: none; z-index: 100;
         }
     </style>
 </head>
 <body>
+    <div class="watermark">URS数据科学团队 © 2026</div>
+    
     <div class="scenario-switch">
-        <button class="scenario-btn active" data-scenario="monitoring" onclick="switchScenario('monitoring')">
-            <span>📈</span> 长期观测
-        </button>
-        <button class="scenario-btn" data-scenario="ab-test" onclick="switchScenario('ab-test')">
-            <span>🧪</span> AB 测试
-        </button>
+        <button class="scenario-btn active" data-scenario="monitoring" onclick="switchScenario('monitoring')">📈 长期观测</button>
+        <button class="scenario-btn" data-scenario="ab-test" onclick="switchScenario('ab-test')">🧪 AB 测试</button>
     </div>
 
     <div class="container">
         <header>
-            <h1>📊 <span id="page-title">长期观测</span>最小样本量计算器</h1>
+            <h1><span id="page-title">长期观测</span>最小样本量计算器</h1>
             <p class="subtitle">基于二项分布的加权页面样本量估算工具</p>
-            <div class="scenario-badge monitoring" id="scenario-badge">
-                <span>📈</span><span>配对样本假设</span>
-            </div>
+            <div class="scenario-badge monitoring" id="scenario-badge">📈 配对样本</div>
         </header>
 
         <div class="mode-switch">
             <div class="switch-container">
-                <button class="switch-btn active" data-mode="precision-to-sample" onclick="switchMode('precision-to-sample')">
-                    <span class="switch-icon">🎯</span> 精度 → 样本量
-                </button>
-                <button class="switch-btn" data-mode="sample-to-precision" onclick="switchMode('sample-to-precision')">
-                    <span class="switch-icon">📐</span> 样本量 → 精度
-                </button>
+                <button class="switch-btn active" data-mode="mode1" onclick="switchMode('mode1')">🎯 精度 → 样本量</button>
+                <button class="switch-btn" data-mode="mode2" onclick="switchMode('mode2')">📐 样本量 → 精度</button>
             </div>
         </div>
 
-        <!-- Mode 1 -->
-        <div id="mode-precision-to-sample">
+        <!-- ==================== Mode 1: 精度 → 样本量 ==================== -->
+        <div id="mode1">
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon blue">🌐</div>
-                    <div>
-                        <div class="card-title">总体参数设置</div>
-                        <div class="card-desc">设定整体实验的观测目标和精度要求</div>
-                    </div>
+                    <div><div class="card-title">总体参数设置</div><div class="card-desc">设定观测目标和精度要求</div></div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>总体观测目标 p <span class="tooltip" data-tip="总体的预期比例值，例如：URS分数(6-7分占比)、lose率、某原因占比等。填写0-100之间的百分比数值。">ⓘ</span></label>
-                        <div class="input-suffix" data-suffix="%">
-                            <input type="number" id="global-p" placeholder="例如: 70" step="0.1" min="0" max="100">
+                
+                <!-- 长期观测：单组输入 -->
+                <div id="m1-monitoring">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>总体观测目标 p <span class="tooltip tip-right" data-tip="预期的比例值，如满意率、转化率等。填写0-100之间的百分比。">ⓘ</span></label>
+                            <div class="input-suffix" data-suffix="%"><input type="number" id="m1-p" placeholder="例如: 70" step="0.1" min="0" max="100"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>总体波动精度 δ (MDE) <span class="tooltip" data-tip="希望检测到的最小波动。如想检测1%的波动（70%→71%），填1。">ⓘ</span></label>
+                            <div class="input-suffix" data-suffix="%"><input type="number" id="m1-delta" placeholder="例如: 1" step="0.1" min="0"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>显著性水平 α <span class="tooltip" data-tip="假阳性率。α=0.2表示20%概率误报。常用0.05-0.2。">ⓘ</span></label>
+                            <input type="number" id="m1-alpha" value="0.2" step="0.01" min="0.01" max="0.2">
+                        </div>
+                        <div class="form-group">
+                            <label>统计功效 (1-β) <span class="tooltip tip-left" data-tip="检测到真实效应的概率。0.8表示80%概率检测到。常用0.6-0.8。">ⓘ</span></label>
+                            <input type="number" id="m1-power" value="0.6" step="0.01" min="0.5" max="0.99">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>总体波动精度 δ (MDE) <span class="tooltip" data-tip="最小可检测效应(MDE)：希望检测到的最小波动幅度。例如想检测1%的波动（从70%变为71%或69%），则填写1。">ⓘ</span></label>
-                        <div class="input-suffix" data-suffix="%">
-                            <input type="number" id="global-delta" placeholder="例如: 1" step="0.1" min="0">
+                </div>
+                
+                <!-- AB测试：两组分别输入 -->
+                <div id="m1-ab" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>总体波动精度 δ (MDE) <span class="tooltip tip-right" data-tip="最小可检测效应：希望检测到的B组相对于A组的最小差异。例如A组为70%，想检测到71%或69%的变化，填1。">ⓘ</span></label>
+                            <div class="input-suffix" data-suffix="%"><input type="number" id="m1-ab-delta" placeholder="例如: 1" step="0.1" min="0"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>显著性水平 α <span class="tooltip" data-tip="假阳性率。α=0.2表示20%概率误报。">ⓘ</span></label>
+                            <input type="number" id="m1-ab-alpha" value="0.2" step="0.01" min="0.01" max="0.2">
+                        </div>
+                        <div class="form-group">
+                            <label>统计功效 (1-β) <span class="tooltip tip-left" data-tip="检测到真实效应的概率。0.6表示60%概率检测到。">ⓘ</span></label>
+                            <input type="number" id="m1-ab-power" value="0.6" step="0.01" min="0.5" max="0.99">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>显著性水平 α <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。α=0.1表示有10%概率在无真实波动时误报。常用0.05或0.1，最宽松允许0.2。">ⓘ</span></label>
-                        <input type="number" id="alpha" value="0.2" step="0.01" min="0.01" max="0.2">
-                    </div>
-                    <div class="form-group">
-                        <label>统计功效 (1-β) <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。Power=0.8表示有80%概率检测到真实波动。常用0.7-0.8，最低允许0.6。">ⓘ</span></label>
-                        <input type="number" id="power" value="0.6" step="0.01" min="0.6" max="0.99">
-                    </div>
-                    <div class="form-group" id="ratio-group-1" style="display: none;">
-                        <label>分配比例 r (实验/对照) <span class="tooltip" data-tip="实验组与对照组的样本量比例。r=1表示1:1分配（最高效）；r=0.5表示实验组是对照组的一半；r=2表示实验组是对照组的两倍。偏离1:1会增加总样本量需求。">ⓘ</span></label>
-                        <input type="number" id="ratio" value="1" step="0.1" min="0.1" max="10">
+                    <div class="two-column">
+                        <div class="column-box">
+                            <div class="column-header control">A 组（对照组 / 基准组）</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>预期比例 p <span class="tooltip tip-right" data-tip="A组（对照组）的预期比例值，作为比较基准。">ⓘ</span></label>
+                                    <div class="input-suffix" data-suffix="%"><input type="number" id="m1-ab-p1" placeholder="例如: 70" step="0.1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-box">
+                            <div class="column-header treatment">B 组（实验组）</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>预期比例 p <span class="tooltip tip-left" data-tip="B组（实验组）的预期比例值。通常与A组相近，除非预期有明显效应。">ⓘ</span></label>
+                                    <div class="input-suffix" data-suffix="%"><input type="number" id="m1-ab-p2" placeholder="例如: 70" step="0.1"></div>
+                                </div>
+                            </div>
+                            <div class="checkbox-row">
+                                <input type="checkbox" id="m1-sync-p" checked>
+                                <label for="m1-sync-p">AB组预期比例 p 一致</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="info-box" id="info-box-1"></div>
+                
+                <div class="info-box" id="m1-info"></div>
             </div>
 
+            <!-- 页面配置 -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
-                    <div>
-                        <div class="card-title">LDBOM 页面加权配置</div>
-                        <div class="card-desc">选择需要观测的页面，设置各页面的权重和参数</div>
-                    </div>
+                    <div><div class="card-title">LDBOM 页面加权配置</div><div class="card-desc">选择页面，设置权重和参数（可选）</div></div>
                 </div>
                 <div class="preset-section">
                     <span class="preset-label">快捷预设：</span>
                     <div class="preset-buttons">
-                        <button class="preset-btn" onclick="applyPreset('all-ldbom')">全部 LDBOM 页面</button>
-                        <button class="preset-btn" onclick="applyPreset('db-only')">仅 DB 页面</button>
-                        <button class="preset-btn" onclick="applyPreset('clear')">清除选择</button>
+                        <button class="preset-btn" onclick="applyPreset(1,'all')">全部 LDBOM</button>
+                        <button class="preset-btn" onclick="applyPreset(1,'db')">仅 DB 页面</button>
+                        <button class="preset-btn" onclick="applyPreset(1,'clear')">清除</button>
                     </div>
                 </div>
-                <div class="page-grid">
-                    <div><input type="checkbox" id="page-L" class="page-checkbox" onchange="togglePage('L')"><label for="page-L" class="page-label">L<span class="page-full-name">List 列表页</span></label></div>
-                    <div><input type="checkbox" id="page-D" class="page-checkbox" onchange="togglePage('D')"><label for="page-D" class="page-label">D<span class="page-full-name">Detail 详情页</span></label></div>
-                    <div><input type="checkbox" id="page-B" class="page-checkbox" onchange="togglePage('B')"><label for="page-B" class="page-label">B<span class="page-full-name">Booking 预订页</span></label></div>
-                    <div><input type="checkbox" id="page-O" class="page-checkbox" onchange="togglePage('O')"><label for="page-O" class="page-label">O<span class="page-full-name">Order 订单页</span></label></div>
-                    <div><input type="checkbox" id="page-M" class="page-checkbox" onchange="togglePage('M')"><label for="page-M" class="page-label">M<span class="page-full-name">Message 订后短信</span></label></div>
-                </div>
-                <div class="page-configs" id="page-configs"></div>
+                <div class="page-grid" id="m1-page-grid"></div>
+                <div class="page-configs" id="m1-page-configs"></div>
             </div>
 
             <div class="action-row">
-                <button class="btn btn-secondary" onclick="resetForm()">🔄 重置</button>
-                <button class="btn btn-primary" onclick="calculateSampleSize()">📊 计算最小样本量</button>
+                <button class="btn btn-secondary" onclick="resetMode(1)">🔄 重置</button>
+                <button class="btn btn-primary" onclick="calcMode1()">📊 计算样本量</button>
             </div>
 
-            <div class="results-section" id="results-sample">
+            <div class="results-section" id="m1-results">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon purple">📈</div>
-                        <div><div class="card-title">计算结果</div><div class="card-desc">基于输入参数计算得出的最小样本量</div></div>
+                        <div><div class="card-title">计算结果</div><div class="card-desc">最小样本量需求</div></div>
                     </div>
-                    <div id="simple-result">
-                        <div class="result-summary">
-                            <div class="result-label" id="result-label">总最小样本量（单组）</div>
-                            <div class="result-value" id="total-sample-size">--</div>
-                            <div class="result-note" id="result-note"></div>
-                        </div>
+                    <div id="m1-result-content"></div>
+                    <h4 class="section-title" id="m1-page-title" style="display:none;">各页面详情</h4>
+                    <div class="table-container" id="m1-table-container" style="display:none;">
+                        <table class="results-table"><thead id="m1-thead"></thead><tbody id="m1-tbody"></tbody></table>
                     </div>
-                    <div id="ab-result" style="display: none;">
-                        <div class="ab-result-grid">
-                            <div class="ab-result-card"><div class="ab-result-label">对照组 (Control)</div><div class="ab-result-value" id="control-size">--</div></div>
-                            <div class="ab-result-card"><div class="ab-result-label">实验组 (Treatment)</div><div class="ab-result-value" id="treatment-size">--</div></div>
-                            <div class="ab-result-card highlight"><div class="ab-result-label">总样本量</div><div class="ab-result-value" id="total-ab-size">--</div></div>
-                        </div>
-                        <div class="result-note" id="ab-result-note" style="text-align: center; margin-bottom: 20px;"></div>
-                    </div>
-                    <h4 class="section-title">各页面详情</h4>
-                    <div class="table-container">
-                        <table class="results-table">
-                            <thead><tr><th>页面</th><th>页面权重</th><th>页面 p</th><th>页面精度 δ</th><th>最小样本量</th><th>状态</th></tr></thead>
-                            <tbody id="page-results-body"></tbody>
-                        </table>
-                    </div>
-                    <div class="formula-display" id="formula-display"></div>
+                    <div class="formula-display" id="m1-formula"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Mode 2 -->
-        <div id="mode-sample-to-precision" style="display: none;">
+        <!-- ==================== Mode 2: 样本量 → 精度 ==================== -->
+        <div id="mode2" style="display:none;">
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon blue">🌐</div>
-                    <div><div class="card-title">总体参数设置</div><div class="card-desc">输入实际样本量，反推可检测的波动精度</div></div>
+                    <div><div class="card-title">总体参数设置</div><div class="card-desc">输入样本量，反推可检测精度</div></div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>总体观测目标 p <span class="tooltip" data-tip="总体的预期比例值。填写0-100之间的百分比数值。">ⓘ</span></label>
-                        <div class="input-suffix" data-suffix="%">
-                            <input type="number" id="global-p-2" placeholder="例如: 70" step="0.1" min="0" max="100">
+                
+                <!-- 长期观测 -->
+                <div id="m2-monitoring">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>总体观测目标 p <span class="tooltip tip-right" data-tip="预期的比例值。填写0-100之间的百分比。">ⓘ</span></label>
+                            <div class="input-suffix" data-suffix="%"><input type="number" id="m2-p" placeholder="例如: 70" step="0.1" min="0" max="100"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>总样本量 n <span class="tooltip" data-tip="当前可获得的单组总样本量。">ⓘ</span></label>
+                            <input type="number" id="m2-n" placeholder="例如: 10000" step="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>显著性水平 α <span class="tooltip" data-tip="假阳性率。常用0.05-0.2。">ⓘ</span></label>
+                            <input type="number" id="m2-alpha" value="0.2" step="0.01" min="0.01" max="0.2">
+                        </div>
+                        <div class="form-group">
+                            <label>统计功效 (1-β) <span class="tooltip tip-left" data-tip="检测到真实效应的概率。常用0.6-0.8。">ⓘ</span></label>
+                            <input type="number" id="m2-power" value="0.6" step="0.01" min="0.5" max="0.99">
                         </div>
                     </div>
-                    <div class="form-group" id="sample-input-group">
-                        <label id="sample-input-label">总样本量（单组） <span class="tooltip" data-tip="当前可获得的单组总样本量。">ⓘ</span></label>
-                        <input type="number" id="global-n-2" placeholder="例如: 10000" step="1" min="0">
+                </div>
+                
+                <!-- AB测试 -->
+                <div id="m2-ab" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>显著性水平 α <span class="tooltip tip-right" data-tip="假阳性率。常用0.05-0.2。">ⓘ</span></label>
+                            <input type="number" id="m2-ab-alpha" value="0.2" step="0.01" min="0.01" max="0.2">
+                        </div>
+                        <div class="form-group">
+                            <label>统计功效 (1-β) <span class="tooltip tip-left" data-tip="检测到真实效应的概率。">ⓘ</span></label>
+                            <input type="number" id="m2-ab-power" value="0.6" step="0.01" min="0.5" max="0.99">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>显著性水平 α <span class="tooltip" data-tip="犯第一类错误的概率（假阳性率）。">ⓘ</span></label>
-                        <input type="number" id="alpha-2" value="0.2" step="0.01" min="0.01" max="0.2">
-                    </div>
-                    <div class="form-group">
-                        <label>统计功效 (1-β) <span class="tooltip" data-tip="在真实存在波动时能检测到的概率。">ⓘ</span></label>
-                        <input type="number" id="power-2" value="0.6" step="0.01" min="0.6" max="0.99">
-                    </div>
-                    <div class="form-group" id="ratio-group-2" style="display: none;">
-                        <label>分配比例 r (实验/对照) <span class="tooltip" data-tip="实验组与对照组的样本量比例。输入的样本量将作为对照组样本量。">ⓘ</span></label>
-                        <input type="number" id="ratio-2" value="1" step="0.1" min="0.1" max="10">
+                    <div class="two-column">
+                        <div class="column-box">
+                            <div class="column-header control">A 组（对照组 / 基准组）</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>预期比例 p <span class="tooltip tip-right" data-tip="A组（对照组）的预期比例值，作为比较基准。">ⓘ</span></label>
+                                    <div class="input-suffix" data-suffix="%"><input type="number" id="m2-ab-p1" placeholder="例如: 70" step="0.1"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>样本量 n <span class="tooltip tip-left" data-tip="A组（对照组）的样本量。">ⓘ</span></label>
+                                    <input type="number" id="m2-ab-n1" placeholder="例如: 5000" step="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-box">
+                            <div class="column-header treatment">B 组（实验组）</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>预期比例 p <span class="tooltip tip-right" data-tip="B组（实验组）的预期比例值。">ⓘ</span></label>
+                                    <div class="input-suffix" data-suffix="%"><input type="number" id="m2-ab-p2" placeholder="例如: 70" step="0.1"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>样本量 n <span class="tooltip tip-left" data-tip="B组（实验组）的样本量。">ⓘ</span></label>
+                                    <input type="number" id="m2-ab-n2" placeholder="例如: 5000" step="1">
+                                </div>
+                            </div>
+                            <div class="checkbox-row">
+                                <input type="checkbox" id="m2-sync-p" checked>
+                                <label for="m2-sync-p">AB组预期比例 p 一致</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="info-box" id="info-box-2"></div>
+                
+                <div class="info-box" id="m2-info"></div>
             </div>
 
+            <!-- 页面配置 -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
-                    <div><div class="card-title">LDBOM 页面加权配置</div><div class="card-desc">选择需要观测的页面，输入各页面的实际样本量</div></div>
+                    <div><div class="card-title">LDBOM 页面加权配置</div><div class="card-desc">选择页面，输入各页面参数（可选）</div></div>
                 </div>
                 <div class="preset-section">
                     <span class="preset-label">快捷预设：</span>
                     <div class="preset-buttons">
-                        <button class="preset-btn" onclick="applyPreset2('all-ldbom')">全部 LDBOM 页面</button>
-                        <button class="preset-btn" onclick="applyPreset2('db-only')">仅 DB 页面</button>
-                        <button class="preset-btn" onclick="applyPreset2('clear')">清除选择</button>
+                        <button class="preset-btn" onclick="applyPreset(2,'all')">全部 LDBOM</button>
+                        <button class="preset-btn" onclick="applyPreset(2,'db')">仅 DB 页面</button>
+                        <button class="preset-btn" onclick="applyPreset(2,'clear')">清除</button>
                     </div>
                 </div>
-                <div class="page-grid">
-                    <div><input type="checkbox" id="page-L-2" class="page-checkbox" onchange="togglePage2('L')"><label for="page-L-2" class="page-label">L<span class="page-full-name">List 列表页</span></label></div>
-                    <div><input type="checkbox" id="page-D-2" class="page-checkbox" onchange="togglePage2('D')"><label for="page-D-2" class="page-label">D<span class="page-full-name">Detail 详情页</span></label></div>
-                    <div><input type="checkbox" id="page-B-2" class="page-checkbox" onchange="togglePage2('B')"><label for="page-B-2" class="page-label">B<span class="page-full-name">Booking 预订页</span></label></div>
-                    <div><input type="checkbox" id="page-O-2" class="page-checkbox" onchange="togglePage2('O')"><label for="page-O-2" class="page-label">O<span class="page-full-name">Order 订单页</span></label></div>
-                    <div><input type="checkbox" id="page-M-2" class="page-checkbox" onchange="togglePage2('M')"><label for="page-M-2" class="page-label">M<span class="page-full-name">Message 订后短信</span></label></div>
-                </div>
-                <div class="page-configs" id="page-configs-2"></div>
+                <div class="page-grid" id="m2-page-grid"></div>
+                <div class="page-configs" id="m2-page-configs"></div>
             </div>
 
             <div class="action-row">
-                <button class="btn btn-secondary" onclick="resetForm2()">🔄 重置</button>
-                <button class="btn btn-primary" onclick="calculatePrecision()">📐 计算可检测精度</button>
+                <button class="btn btn-secondary" onclick="resetMode(2)">🔄 重置</button>
+                <button class="btn btn-primary" onclick="calcMode2()">📐 计算精度</button>
             </div>
 
-            <div class="results-section" id="results-precision">
+            <div class="results-section" id="m2-results">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon purple">📈</div>
-                        <div><div class="card-title">可检测精度结果</div><div class="card-desc">基于当前样本量，可以检测到的最小波动</div></div>
+                        <div><div class="card-title">可检测精度</div><div class="card-desc">基于样本量的最小可检测效应</div></div>
                     </div>
-                    <div class="result-summary">
-                        <div class="result-label">总体可检测波动 (MDE)</div>
-                        <div class="result-value" id="total-precision">--<span class="result-unit">%</span></div>
-                        <div class="result-note">在 α=<span id="result-alpha">0.1</span>, Power=<span id="result-power">0.8</span> 条件下可检测的最小波动</div>
+                    <div id="m2-result-content"></div>
+                    <h4 class="section-title">置信区间半宽</h4>
+                    <div class="ci-grid" id="m2-ci-grid"></div>
+                    <h4 class="section-title" id="m2-page-title" style="display:none;">各页面详情</h4>
+                    <div class="table-container" id="m2-table-container" style="display:none;">
+                        <table class="results-table"><thead id="m2-thead"></thead><tbody id="m2-tbody"></tbody></table>
                     </div>
-                    <h4 class="section-title">置信区间半宽 (CI Half-Width)</h4>
-                    <div class="ci-grid" id="total-ci-grid"></div>
-                    <h4 class="section-title">各页面详情</h4>
-                    <div class="table-container">
-                        <table class="results-table">
-                            <thead><tr><th>页面</th><th>页面权重</th><th>页面 p</th><th>样本量 n</th><th>页面MDE</th><th>90% CI</th><th>95% CI</th><th>99% CI</th></tr></thead>
-                            <tbody id="precision-results-body"></tbody>
-                        </table>
-                    </div>
-                    <div class="formula-display" id="formula-display-2"></div>
+                    <div class="formula-display" id="m2-formula"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        let currentScenario = 'monitoring';
-        const PAGE_INFO = {
-            'L': { name: 'L', fullName: 'List 列表页' },
-            'D': { name: 'D', fullName: 'Detail 详情页' },
-            'B': { name: 'B', fullName: 'Booking 预订页' },
-            'O': { name: 'O', fullName: 'Order 订单页' },
-            'M': { name: 'M', fullName: 'Message 订后短信页' }
-        };
-        const PAGES = ['L', 'D', 'B', 'O', 'M'];
-        const Z_VALUES = { 0.90: 1.645, 0.95: 1.960, 0.99: 2.576 };
+<script>
+/******************************************************************************
+ * 统计公式说明
+ * 
+ * 【长期观测 - 配对样本】
+ * 同一群体跨周期比较，假设高度相关
+ * SE = √(p(1-p)/n)
+ * MDE = Z × SE，其中 Z = Z_α/2 + Z_β
+ * n = Z² × p(1-p) / δ²
+ * 
+ * 【AB测试 - 独立双样本】
+ * 两个独立群体比较
+ * SE = √(p₁(1-p₁)/n₁ + p₂(1-p₂)/n₂)
+ * MDE = Z × SE
+ * 
+ * 当 p₁=p₂=p 且 n₁=n₂=n 时：
+ * SE = √(2p(1-p)/n)
+ * n = 2 × Z² × p(1-p) / δ²（每组）
+ * 
+ * 【页面加权 SE】
+ * 长期观测：SE = √(Σ wᵢ² × pᵢ(1-pᵢ) / nᵢ)
+ * AB测试：SE = √(Σ wᵢ² × [p₁ᵢ(1-p₁ᵢ)/n₁ᵢ + p₂ᵢ(1-p₂ᵢ)/n₂ᵢ])
+ *         当两组权重相同时，简化为上述公式
+ ******************************************************************************/
 
-        function normInv(p) {
-            const a1=-39.69683028665376, a2=220.9460984245205, a3=-275.9285104469687, a4=138.3577518672690, a5=-30.66479806614716, a6=2.506628277459239;
-            const b1=-54.47609879822406, b2=161.5858368580409, b3=-155.6989798598866, b4=66.80131188771972, b5=-13.28068155288572;
-            const c1=-0.007784894002430293, c2=-0.3223964580411365, c3=-2.400758277161838, c4=-2.549732539343734, c5=4.374664141464968, c6=2.938163982698783;
-            const d1=0.007784695709041462, d2=0.3224671290700398, d3=2.445134137142996, d4=3.754408661907416;
-            const pLow=0.02425, pHigh=1-pLow;
-            let q, r;
-            if (p < pLow) { q = Math.sqrt(-2*Math.log(p)); return (((((c1*q+c2)*q+c3)*q+c4)*q+c5)*q+c6) / ((((d1*q+d2)*q+d3)*q+d4)*q+1); }
-            else if (p <= pHigh) { q = p-0.5; r = q*q; return (((((a1*r+a2)*r+a3)*r+a4)*r+a5)*r+a6)*q / (((((b1*r+b2)*r+b3)*r+b4)*r+b5)*r+1); }
-            else { q = Math.sqrt(-2*Math.log(1-p)); return -(((((c1*q+c2)*q+c3)*q+c4)*q+c5)*q+c6) / ((((d1*q+d2)*q+d3)*q+d4)*q+1); }
-        }
+let scenario = 'monitoring';
+const PAGES = ['L', 'D', 'B', 'O', 'M'];
+const PAGE_NAMES = { L: 'List 列表页', D: 'Detail 详情页', B: 'Booking 预订页', O: 'Order 订单页', M: 'Message 订后短信' };
+const Z_CI = { 0.90: 1.645, 0.95: 1.960, 0.99: 2.576 };
 
-        function getZAlpha(alpha) { return normInv(1 - alpha/2); }
-        function getZBeta(power) { return normInv(power); }
-        function getVarianceMultiplier(ratio=1) { return currentScenario === 'monitoring' ? 1 : (1+ratio)/ratio; }
+// 正态逆函数
+function normInv(p) {
+    if (p <= 0 || p >= 1) return p <= 0 ? -Infinity : Infinity;
+    const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
+    const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+    const c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+    const d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+    const pLow = 0.02425;
+    let q, r;
+    if (p < pLow) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    } else if (p <= 1 - pLow) {
+        q = p - 0.5; r = q * q;
+        return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    } else {
+        q = Math.sqrt(-2 * Math.log(1 - p));
+        return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+}
 
-        function calcMinSampleSize(p, delta, alpha, power, ratio=1) {
-            const zAlpha = getZAlpha(alpha), zBeta = getZBeta(power);
-            const multiplier = getVarianceMultiplier(ratio);
-            return Math.ceil(Math.pow(zAlpha+zBeta, 2) * p * (1-p) * multiplier / Math.pow(delta, 2));
-        }
+function getZ(alpha, power) { return normInv(1 - alpha/2) + normInv(power); }
 
-        function calcPrecision(p, n, alpha, power, ratio=1) {
-            const zAlpha = getZAlpha(alpha), zBeta = getZBeta(power);
-            if (currentScenario === 'monitoring') return (zAlpha+zBeta) * Math.sqrt(p*(1-p)/n);
-            const n1=n, n2=ratio*n;
-            return (zAlpha+zBeta) * Math.sqrt(p*(1-p) * (1/n1 + 1/n2));
-        }
+// ========== 核心计算函数 ==========
 
-        function calcCIHalfWidth(p, n, conf) { return (Z_VALUES[conf] || normInv(1-(1-conf)/2)) * Math.sqrt(p*(1-p)/n); }
-        function calcWeightedSE(pages) { return Math.sqrt(pages.reduce((s,pg) => s + Math.pow(pg.w,2)*pg.p*(1-pg.p)/pg.n, 0)); }
+/** 长期观测：计算样本量 */
+function calcN_single(p, delta, alpha, power) {
+    const z = getZ(alpha, power);
+    return Math.ceil(z * z * p * (1-p) / (delta * delta));
+}
 
-        function switchScenario(scenario) {
-            currentScenario = scenario;
-            document.querySelectorAll('.scenario-btn').forEach(btn => {
-                btn.classList.remove('active', 'ab-test');
-                if (btn.dataset.scenario === scenario) { btn.classList.add('active'); if (scenario==='ab-test') btn.classList.add('ab-test'); }
-            });
-            document.getElementById('page-title').textContent = scenario==='ab-test' ? 'AB 测试 ' : '长期观测 ';
-            const badge = document.getElementById('scenario-badge');
-            badge.className = scenario==='ab-test' ? 'scenario-badge ab-test' : 'scenario-badge monitoring';
-            badge.innerHTML = scenario==='ab-test' ? '<span>🧪</span><span>独立样本假设</span>' : '<span>📈</span><span>配对样本假设</span>';
-            document.getElementById('ratio-group-1').style.display = scenario==='ab-test' ? 'flex' : 'none';
-            document.getElementById('ratio-group-2').style.display = scenario==='ab-test' ? 'flex' : 'none';
-            document.getElementById('sample-input-label').innerHTML = scenario==='ab-test' 
-                ? '对照组样本量 <span class="tooltip" data-tip="对照组的样本量。实验组 = r × 对照组。">ⓘ</span>'
-                : '总样本量（单组） <span class="tooltip" data-tip="当前可获得的单组总样本量。">ⓘ</span>';
-            updateInfoBoxes();
-            document.getElementById('results-sample').classList.remove('visible');
-            document.getElementById('results-precision').classList.remove('visible');
-        }
+/** 长期观测：计算MDE */
+function calcMDE_single(p, n, alpha, power) {
+    const z = getZ(alpha, power);
+    return z * Math.sqrt(p * (1-p) / n);
+}
 
-        function updateInfoBoxes() {
-            const ib1 = document.getElementById('info-box-1'), ib2 = document.getElementById('info-box-2');
-            if (currentScenario === 'ab-test') {
-                ib1.className = 'info-box ab-test';
-                ib1.innerHTML = '<strong>💡 公式：</strong>n<sub>对照</sub> = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) × (1+r)/r / δ²，n<sub>实验</sub> = r × n<sub>对照</sub><br><strong>理论假设：</strong>独立样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。r=1时总样本量最小。';
-                ib2.className = 'info-box ab-test';
-                ib2.innerHTML = '<strong>💡 公式：</strong>MDE = (Z<sub>α/2</sub>+Z<sub>β</sub>) × √(p(1-p) × (1/n<sub>对照</sub> + 1/n<sub>实验</sub>))<br><strong>理论假设：</strong>独立样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。r=1时总样本量最小。';
+/** AB测试（等样本）：计算每组样本量 */
+function calcN_ab_equal(p, delta, alpha, power) {
+    const z = getZ(alpha, power);
+    return Math.ceil(2 * z * z * p * (1-p) / (delta * delta));
+}
+
+/** AB测试（不等样本）：计算MDE */
+function calcMDE_ab(p1, n1, p2, n2, alpha, power) {
+    const z = getZ(alpha, power);
+    const se = Math.sqrt(p1*(1-p1)/n1 + p2*(1-p2)/n2);
+    return z * se;
+}
+
+/** 计算SE（用于CI） */
+function calcSE_single(p, n) { return Math.sqrt(p * (1-p) / n); }
+function calcSE_ab(p1, n1, p2, n2) { return Math.sqrt(p1*(1-p1)/n1 + p2*(1-p2)/n2); }
+
+/** 加权SE */
+function calcWeightedSE_single(pages) {
+    return Math.sqrt(pages.reduce((sum, pg) => sum + pg.w * pg.w * pg.p * (1-pg.p) / pg.n, 0));
+}
+function calcWeightedSE_ab(pages) {
+    return Math.sqrt(pages.reduce((sum, pg) => {
+        const var1 = pg.p1 * (1-pg.p1) / pg.n1;
+        const var2 = pg.p2 * (1-pg.p2) / pg.n2;
+        return sum + pg.w * pg.w * (var1 + var2);
+    }, 0));
+}
+
+/** CI半宽 */
+function calcCI(se, conf) { return Z_CI[conf] * se; }
+
+// ========== UI 函数 ==========
+
+function switchScenario(s) {
+    scenario = s;
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+        btn.classList.remove('active', 'ab-test');
+        if (btn.dataset.scenario === s) { btn.classList.add('active'); if (s === 'ab-test') btn.classList.add('ab-test'); }
+    });
+    document.getElementById('page-title').textContent = s === 'ab-test' ? 'AB 测试 ' : '长期观测 ';
+    document.getElementById('scenario-badge').className = 'scenario-badge ' + (s === 'ab-test' ? 'ab-test' : 'monitoring');
+    document.getElementById('scenario-badge').textContent = s === 'ab-test' ? '🧪 独立双样本' : '📈 配对样本';
+    
+    // 切换输入区
+    document.getElementById('m1-monitoring').style.display = s === 'monitoring' ? 'block' : 'none';
+    document.getElementById('m1-ab').style.display = s === 'ab-test' ? 'block' : 'none';
+    document.getElementById('m2-monitoring').style.display = s === 'monitoring' ? 'block' : 'none';
+    document.getElementById('m2-ab').style.display = s === 'ab-test' ? 'block' : 'none';
+    
+    updateInfoBoxes();
+    initPageConfigs();
+    document.getElementById('m1-results').classList.remove('visible');
+    document.getElementById('m2-results').classList.remove('visible');
+}
+
+function switchMode(mode) {
+    document.querySelectorAll('.switch-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+    document.getElementById('mode1').style.display = mode === 'mode1' ? 'block' : 'none';
+    document.getElementById('mode2').style.display = mode === 'mode2' ? 'block' : 'none';
+}
+
+function updateInfoBoxes() {
+    const m1 = document.getElementById('m1-info'), m2 = document.getElementById('m2-info');
+    if (scenario === 'ab-test') {
+        m1.className = 'info-box ab-test';
+        m1.innerHTML = '<strong>💡 AB测试公式：</strong>每组 n = 2×Z²×p(1-p)/δ²，其中 Z = Z<sub>α/2</sub> + Z<sub>β</sub><br><strong>说明：</strong>两组独立，方差叠加需×2。1:1分配时效率最高。';
+        m2.className = 'info-box ab-test';
+        m2.innerHTML = '<strong>💡 AB测试公式：</strong>MDE = Z × √(p₁(1-p₁)/n₁ + p₂(1-p₂)/n₂)<br><strong>说明：</strong>支持两组不同的 p 值和样本量。';
+    } else {
+        m1.className = 'info-box';
+        m1.innerHTML = '<strong>💡 长期观测公式：</strong>n = Z²×p(1-p)/δ²，其中 Z = Z<sub>α/2</sub> + Z<sub>β</sub><br><strong>说明：</strong>配对样本（同一群体跨周期），单组样本量。';
+        m2.className = 'info-box';
+        m2.innerHTML = '<strong>💡 长期观测公式：</strong>MDE = Z × √(p(1-p)/n)<br><strong>说明：</strong>可通过页面加权计算整体精度。';
+    }
+}
+
+// 页面配置生成
+function initPageConfigs() {
+    for (let mode = 1; mode <= 2; mode++) {
+        const gridHtml = PAGES.map(p => `<div><input type="checkbox" id="m${mode}-pg-${p}" class="page-checkbox" onchange="togglePage(${mode},'${p}')"><label for="m${mode}-pg-${p}" class="page-label">${p}<span class="page-full-name">${PAGE_NAMES[p]}</span></label></div>`).join('');
+        document.getElementById(`m${mode}-page-grid`).innerHTML = gridHtml;
+        
+        let configHtml = '';
+        for (const p of PAGES) {
+            if (scenario === 'ab-test') {
+                // AB测试：两个模式统一字段顺序和wording
+                const nLabel1 = mode === 1 ? 'A组预估样本量' : 'A组样本量 n';
+                const nLabel2 = mode === 1 ? 'B组预估样本量' : 'B组样本量 n';
+                configHtml += `<div class="page-config" id="m${mode}-cfg-${p}">
+                    <div class="page-config-header"><span class="page-badge ${p}">${p}</span><span style="color:var(--text-secondary)">${PAGE_NAMES[p]}</span></div>
+                    <div class="form-grid" style="grid-template-columns:repeat(5,1fr);">
+                        <div class="form-group"><label>权重 w</label><input type="number" id="m${mode}-${p}-w" placeholder="0.35" step="0.01" min="0" max="1"></div>
+                        <div class="form-group"><label>A组预期比例 p</label><div class="input-suffix" data-suffix="%"><input type="number" id="m${mode}-${p}-p1" placeholder="70" step="0.1"></div></div>
+                        <div class="form-group"><label>${nLabel1}</label><input type="number" id="m${mode}-${p}-n1" placeholder="5000" step="1"></div>
+                        <div class="form-group"><label>B组预期比例 p</label><div class="input-suffix" data-suffix="%"><input type="number" id="m${mode}-${p}-p2" placeholder="70" step="0.1"></div></div>
+                        <div class="form-group"><label>${nLabel2}</label><input type="number" id="m${mode}-${p}-n2" placeholder="5000" step="1"></div>
+                    </div>
+                    <div class="checkbox-row"><input type="checkbox" id="m${mode}-${p}-sync" checked onchange="syncPageP(${mode},'${p}')"><label for="m${mode}-${p}-sync">AB组预期比例 p 一致</label></div>
+                </div>`;
             } else {
-                ib1.className = 'info-box';
-                ib1.innerHTML = '<strong>💡 公式：</strong>n = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) / δ²<br><strong>理论假设：</strong>配对样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。';
-                ib2.className = 'info-box';
-                ib2.innerHTML = '<strong>💡 公式：</strong>MDE = (Z<sub>α/2</sub>+Z<sub>β</sub>) × SE<br><strong>理论假设：</strong>配对样本。<br> α越小、Power越大，需要的样本量越多。最宽松设置允许α=0.2, Power=0.6。';
+                // 长期观测：单组输入
+                const nLabel = mode === 1 ? '预估样本量 n' : '实际样本量 n';
+                configHtml += `<div class="page-config" id="m${mode}-cfg-${p}">
+                    <div class="page-config-header"><span class="page-badge ${p}">${p}</span><span style="color:var(--text-secondary)">${PAGE_NAMES[p]}</span></div>
+                    <div class="form-grid" style="grid-template-columns:repeat(3,1fr);">
+                        <div class="form-group"><label>权重 w</label><input type="number" id="m${mode}-${p}-w" placeholder="0.35" step="0.01" min="0" max="1"></div>
+                        <div class="form-group"><label>预期比例 p</label><div class="input-suffix" data-suffix="%"><input type="number" id="m${mode}-${p}-p" placeholder="70" step="0.1"></div></div>
+                        <div class="form-group"><label>${nLabel}</label><input type="number" id="m${mode}-${p}-n" placeholder="5000" step="1"></div>
+                    </div>
+                </div>`;
             }
         }
+        document.getElementById(`m${mode}-page-configs`).innerHTML = configHtml;
+    }
+}
 
-        function generatePageConfig(pageId, mode=1) {
-            const suffix = mode===2 ? '-2' : '';
-            return `<div class="page-config" id="config-${pageId}${suffix}">
-                <div class="page-config-header"><span class="page-badge ${pageId}">${pageId}</span><span style="color:var(--text-secondary);font-size:0.85rem;">${PAGE_INFO[pageId].fullName}</span></div>
-                <div class="form-grid">
-                    <div class="form-group"><label>页面权重 w <span class="tooltip" data-tip="该页面的权重，所有权重之和应为1。">ⓘ</span></label><input type="number" id="${pageId}-weight${suffix}" placeholder="例如: 0.35" step="0.01" min="0" max="1"></div>
-                    <div class="form-group"><label>页面 p 值 <span class="tooltip" data-tip="该页面的预估比例值。">ⓘ</span></label><div class="input-suffix" data-suffix="%"><input type="number" id="${pageId}-p${suffix}" placeholder="例如: 70" step="0.1" min="0" max="100"></div></div>
-                    <div class="form-group"><label>${mode===1?'预估':'实际'}样本量 n <span class="tooltip" data-tip="${mode===1?'该页面预计能获得的样本数量。':'该页面实际已收集的样本数量。'}">ⓘ</span></label><input type="number" id="${pageId}-n${suffix}" placeholder="例如: 5000" step="1" min="0"></div>
-                </div></div>`;
-        }
+function togglePage(mode, p) {
+    const checked = document.getElementById(`m${mode}-pg-${p}`).checked;
+    document.getElementById(`m${mode}-cfg-${p}`).classList.toggle('active', checked);
+}
 
-        function initPageConfigs() {
-            document.getElementById('page-configs').innerHTML = PAGES.map(p => generatePageConfig(p,1)).join('');
-            document.getElementById('page-configs-2').innerHTML = PAGES.map(p => generatePageConfig(p,2)).join('');
-        }
+function applyPreset(mode, preset) {
+    PAGES.forEach(p => {
+        document.getElementById(`m${mode}-pg-${p}`).checked = false;
+        document.getElementById(`m${mode}-cfg-${p}`).classList.remove('active');
+    });
+    if (preset === 'all') PAGES.forEach(p => { document.getElementById(`m${mode}-pg-${p}`).checked = true; document.getElementById(`m${mode}-cfg-${p}`).classList.add('active'); });
+    else if (preset === 'db') ['D','B'].forEach(p => { document.getElementById(`m${mode}-pg-${p}`).checked = true; document.getElementById(`m${mode}-cfg-${p}`).classList.add('active'); });
+}
 
-        function switchMode(mode) {
-            document.querySelectorAll('.switch-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode===mode));
-            document.getElementById('mode-precision-to-sample').style.display = mode==='precision-to-sample' ? 'block' : 'none';
-            document.getElementById('mode-sample-to-precision').style.display = mode==='sample-to-precision' ? 'block' : 'none';
-        }
+function syncPageP(mode, p) {
+    const syncCheckbox = document.getElementById(`m${mode}-${p}-sync`);
+    if (syncCheckbox && syncCheckbox.checked) {
+        document.getElementById(`m${mode}-${p}-p2`).value = document.getElementById(`m${mode}-${p}-p1`).value;
+    }
+}
 
-        function togglePage(id) { document.getElementById(`config-${id}`).classList.toggle('active', document.getElementById(`page-${id}`).checked); }
-        function togglePage2(id) { document.getElementById(`config-${id}-2`).classList.toggle('active', document.getElementById(`page-${id}-2`).checked); }
-
-        function applyPreset(preset) {
-            PAGES.forEach(p => { document.getElementById(`page-${p}`).checked = false; document.getElementById(`config-${p}`).classList.remove('active'); });
-            if (preset==='all-ldbom') PAGES.forEach(p => { document.getElementById(`page-${p}`).checked = true; document.getElementById(`config-${p}`).classList.add('active'); });
-            else if (preset==='db-only') { ['D','B'].forEach(p => { document.getElementById(`page-${p}`).checked = true; document.getElementById(`config-${p}`).classList.add('active'); }); }
-            document.querySelectorAll('#mode-precision-to-sample .preset-btn').forEach(btn => btn.classList.remove('active'));
-            if (preset!=='clear' && event) event.target.classList.add('active');
-        }
-
-        function applyPreset2(preset) {
-            PAGES.forEach(p => { document.getElementById(`page-${p}-2`).checked = false; document.getElementById(`config-${p}-2`).classList.remove('active'); });
-            if (preset==='all-ldbom') PAGES.forEach(p => { document.getElementById(`page-${p}-2`).checked = true; document.getElementById(`config-${p}-2`).classList.add('active'); });
-            else if (preset==='db-only') { ['D','B'].forEach(p => { document.getElementById(`page-${p}-2`).checked = true; document.getElementById(`config-${p}-2`).classList.add('active'); }); }
-            document.querySelectorAll('#mode-sample-to-precision .preset-btn').forEach(btn => btn.classList.remove('active'));
-            if (preset!=='clear' && event) event.target.classList.add('active');
-        }
-
-        function getSelectedPages() {
-            return PAGES.filter(id => document.getElementById(`page-${id}`).checked).map(id => ({
-                id, name: id, w: parseFloat(document.getElementById(`${id}-weight`).value)||0,
-                p: (parseFloat(document.getElementById(`${id}-p`).value)||0)/100, n: parseInt(document.getElementById(`${id}-n`).value)||0
-            }));
-        }
-
-        function getSelectedPages2() {
-            return PAGES.filter(id => document.getElementById(`page-${id}-2`).checked).map(id => ({
-                id, name: id, w: parseFloat(document.getElementById(`${id}-weight-2`).value)||0,
-                p: (parseFloat(document.getElementById(`${id}-p-2`).value)||0)/100, n: parseInt(document.getElementById(`${id}-n-2`).value)||0
-            }));
-        }
-
-        function calculateSampleSize() {
-            const globalP = (parseFloat(document.getElementById('global-p').value)||0)/100;
-            const globalDelta = (parseFloat(document.getElementById('global-delta').value)||0)/100;
-            const alpha = parseFloat(document.getElementById('alpha').value)||0.2;
-            const power = parseFloat(document.getElementById('power').value)||0.6;
-            const ratio = parseFloat(document.getElementById('ratio').value)||1;
-
-            if (globalP<=0 || globalP>=1) { alert('请输入有效的总体观测目标 p (0-100%)'); return; }
-            if (globalDelta<=0) { alert('请输入有效的总体波动精度 δ'); return; }
-
-            const pages = getSelectedPages();
-            const tbody = document.getElementById('page-results-body');
-            tbody.innerHTML = '';
-            const zAlpha = getZAlpha(alpha), zBeta = getZBeta(power);
-
-            let n1 = Math.max(calcMinSampleSize(globalP, globalDelta, alpha, power, ratio), 200);
-            let noteText = '', formulaText = '';
-
-            if (currentScenario === 'ab-test') {
-                const n2 = Math.ceil(ratio * n1), nTotal = n1 + n2;
-                document.getElementById('simple-result').style.display = 'none';
-                document.getElementById('ab-result').style.display = 'block';
-                document.getElementById('control-size').textContent = n1.toLocaleString();
-                document.getElementById('treatment-size').textContent = n2.toLocaleString();
-                document.getElementById('total-ab-size').textContent = nTotal.toLocaleString();
-                const ratioDisplay = ratio===1 ? '1:1' : `1:${ratio}`;
-                noteText = `分配比例 ${ratioDisplay}，p=${(globalP*100).toFixed(1)}%, MDE=${(globalDelta*100).toFixed(2)}%, α=${alpha}, Power=${power}`;
-                document.getElementById('ab-result-note').textContent = noteText;
-                const multiplier = (1+ratio)/ratio;
-                formulaText = `<strong>公式：</strong>n<sub>对照</sub> = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) × (1+r)/r / δ²<br><strong>方差乘数：</strong>(1+r)/r = ${multiplier.toFixed(3)}<br><strong>计算：</strong>n<sub>对照</sub> = (${zAlpha.toFixed(3)}+${zBeta.toFixed(3)})² × ${globalP.toFixed(3)} × ${(1-globalP).toFixed(3)} × ${multiplier.toFixed(3)} / ${globalDelta.toFixed(4)}²<br><strong>结果：</strong>对照组=${n1.toLocaleString()}，实验组=${n2.toLocaleString()}，总计=${nTotal.toLocaleString()}`;
-            } else {
-                document.getElementById('simple-result').style.display = 'block';
-                document.getElementById('ab-result').style.display = 'none';
-                document.getElementById('total-sample-size').textContent = n1.toLocaleString();
-                noteText = `p=${(globalP*100).toFixed(1)}%, δ=${(globalDelta*100).toFixed(2)}%, α=${alpha}, Power=${power}`;
-                document.getElementById('result-note').textContent = noteText;
-                formulaText = `<strong>公式：</strong>n = (Z<sub>α/2</sub>+Z<sub>β</sub>)² × p(1-p) / δ²（配对样本假设）<br><strong>计算：</strong>n = (${zAlpha.toFixed(3)}+${zBeta.toFixed(3)})² × ${globalP.toFixed(3)} × ${(1-globalP).toFixed(3)} / ${globalDelta.toFixed(4)}²<br><strong>结果：</strong>n = ${n1.toLocaleString()}`;
+// 同步全局p值
+document.addEventListener('input', e => {
+    if (e.target.id === 'm1-ab-p1' && document.getElementById('m1-sync-p').checked) document.getElementById('m1-ab-p2').value = e.target.value;
+    if (e.target.id === 'm2-ab-p1' && document.getElementById('m2-sync-p').checked) document.getElementById('m2-ab-p2').value = e.target.value;
+    // 页面级同步 - 两个模式都需要
+    for (const p of PAGES) {
+        for (const mode of [1, 2]) {
+            const syncEl = document.getElementById(`m${mode}-${p}-sync`);
+            if (e.target.id === `m${mode}-${p}-p1` && syncEl && syncEl.checked) {
+                document.getElementById(`m${mode}-${p}-p2`).value = e.target.value;
             }
-
-            const validPages = pages.filter(p => p.w>0 && p.p>0);
-            if (validPages.length > 0) {
-                validPages.forEach(page => {
-                    const pageDelta = globalDelta / page.w;
-                    const pageMinN = Math.max(calcMinSampleSize(page.p, pageDelta, alpha, power, ratio), 200);
-                    const status = page.n>0 ? (page.n>=pageMinN ? 'sufficient' : 'insufficient') : 'pending';
-                    const statusClass = status==='sufficient' ? 'success-cell' : status==='insufficient' ? 'warning-cell' : '';
-                    const statusText = status==='sufficient' ? '✓ 充足' : status==='insufficient' ? '⚠ 不足' : '--';
-                    tbody.innerHTML += `<tr><td class="page-name-cell">${page.name} 页</td><td>${page.w.toFixed(2)}</td><td>${(page.p*100).toFixed(1)}%</td><td>${(pageDelta*100).toFixed(2)}%</td><td class="highlight-cell">${pageMinN.toLocaleString()}</td><td class="${statusClass}">${statusText}</td></tr>`;
-                });
-            }
-
-            document.getElementById('formula-display').innerHTML = formulaText;
-            document.getElementById('results-sample').classList.add('visible');
         }
+    }
+});
 
-        function calculatePrecision() {
-            const globalP = (parseFloat(document.getElementById('global-p-2').value)||0)/100;
-            const globalN = parseInt(document.getElementById('global-n-2').value)||0;
-            const alpha = parseFloat(document.getElementById('alpha-2').value)||0.2;
-            const power = parseFloat(document.getElementById('power-2').value)||0.6;
-            const ratio = parseFloat(document.getElementById('ratio-2').value)||1;
+function getSelectedPages(mode) {
+    const pages = [];
+    for (const p of PAGES) {
+        if (!document.getElementById(`m${mode}-pg-${p}`).checked) continue;
+        const w = parseFloat(document.getElementById(`m${mode}-${p}-w`).value) || 0;
+        
+        if (scenario === 'ab-test') {
+            // AB测试：两个模式都有 A/B 组分开的输入
+            let p1 = (parseFloat(document.getElementById(`m${mode}-${p}-p1`).value) || 0) / 100;
+            let p2 = (parseFloat(document.getElementById(`m${mode}-${p}-p2`).value) || 0) / 100;
+            const syncEl = document.getElementById(`m${mode}-${p}-sync`);
+            if (syncEl && syncEl.checked) p2 = p1;
+            const n1 = parseInt(document.getElementById(`m${mode}-${p}-n1`).value) || 0;
+            const n2 = parseInt(document.getElementById(`m${mode}-${p}-n2`).value) || 0;
+            if (w > 0 && p1 > 0 && p2 > 0) {
+                pages.push({ id: p, w, p1, p2, n1, n2, p: (p1+p2)/2 });
+            }
+        } else {
+            // 长期观测：单组输入
+            const pVal = (parseFloat(document.getElementById(`m${mode}-${p}-p`).value) || 0) / 100;
+            const n = parseInt(document.getElementById(`m${mode}-${p}-n`).value) || 0;
+            if (w > 0 && pVal > 0) pages.push({ id: p, w, p: pVal, n });
+        }
+    }
+    return pages;
+}
 
-            if (globalP<=0 || globalP>=1) { alert('请输入有效的总体观测目标 p (0-100%)'); return; }
+// ========== Mode 1: 精度 → 样本量 ==========
+function calcMode1() {
+    let p, p1, p2, delta, alpha, power;
+    
+    if (scenario === 'monitoring') {
+        p = (parseFloat(document.getElementById('m1-p').value) || 0) / 100;
+        delta = (parseFloat(document.getElementById('m1-delta').value) || 0) / 100;
+        alpha = parseFloat(document.getElementById('m1-alpha').value) || 0.2;
+        power = parseFloat(document.getElementById('m1-power').value) || 0.6;
+        if (p <= 0 || p >= 1) { alert('请输入有效的 p 值 (0-100%)'); return; }
+    } else {
+        p1 = (parseFloat(document.getElementById('m1-ab-p1').value) || 0) / 100;
+        p2 = document.getElementById('m1-sync-p').checked ? p1 : (parseFloat(document.getElementById('m1-ab-p2').value) || 0) / 100;
+        delta = (parseFloat(document.getElementById('m1-ab-delta').value) || 0) / 100;
+        alpha = parseFloat(document.getElementById('m1-ab-alpha').value) || 0.2;
+        power = parseFloat(document.getElementById('m1-ab-power').value) || 0.6;
+        p = (p1 + p2) / 2; // 用于计算的平均p
+        if (p1 <= 0 || p1 >= 1 || p2 <= 0 || p2 >= 1) { alert('请输入有效的 p 值'); return; }
+    }
+    if (delta <= 0) { alert('请输入有效的 MDE δ'); return; }
 
-            const pages = getSelectedPages2();
-            const tbody = document.getElementById('precision-results-body');
-            tbody.innerHTML = '';
-            const zAlpha = getZAlpha(alpha), zBeta = getZBeta(power);
-            const validPages = pages.filter(p => p.w>0 && p.p>0 && p.n>0);
+    const z = getZ(alpha, power);
+    const za = normInv(1 - alpha/2), zb = normInv(power);
+    let html = '', formula = '';
 
-            let totalPrecision, totalSE, totalCI90, totalCI95, totalCI99, formulaText = '';
-
-            if (validPages.length === 0 && globalN > 0) {
-                totalPrecision = calcPrecision(globalP, globalN, alpha, power, ratio);
-                totalSE = Math.sqrt(globalP*(1-globalP)/globalN);
-                totalCI90 = calcCIHalfWidth(globalP, globalN, 0.90);
-                totalCI95 = calcCIHalfWidth(globalP, globalN, 0.95);
-                totalCI99 = calcCIHalfWidth(globalP, globalN, 0.99);
-                if (currentScenario === 'ab-test') {
-                    const n2 = Math.ceil(ratio*globalN);
-                    formulaText = `<strong>SE公式：</strong>SE = √(p(1-p) × (1/n<sub>对照</sub> + 1/n<sub>实验</sub>))<br><strong>样本量：</strong>对照组=${globalN.toLocaleString()}，实验组=${n2.toLocaleString()}（r=${ratio}）<br><strong>MDE：</strong>δ = (Z<sub>α/2</sub>+Z<sub>β</sub>) × SE = ${(totalPrecision*100).toFixed(3)}%`;
-                } else {
-                    formulaText = `<strong>SE公式：</strong>SE = √(p(1-p)/n) = ${(totalSE*100).toFixed(4)}%<br><strong>MDE公式：</strong>δ = (Z<sub>α/2</sub>+Z<sub>β</sub>) × SE = ${(totalPrecision*100).toFixed(3)}%`;
+    if (scenario === 'monitoring') {
+        const n = Math.max(calcN_single(p, delta, alpha, power), 30);
+        html = `<div class="result-summary">
+            <div class="result-label">最小样本量（单组）</div>
+            <div class="result-value">${n.toLocaleString()}</div>
+            <div class="result-note">p=${(p*100).toFixed(1)}%, MDE=${(delta*100).toFixed(2)}%, α=${alpha}, Power=${power}</div>
+        </div>`;
+        formula = `<strong>公式：</strong>n = Z² × p(1-p) / δ²<br>
+            <strong>其中：</strong>Z = Z<sub>α/2</sub> + Z<sub>β</sub> = ${za.toFixed(3)} + ${zb.toFixed(3)} = ${z.toFixed(3)}<br>
+            <strong>计算：</strong>n = ${z.toFixed(3)}² × ${p.toFixed(4)} × ${(1-p).toFixed(4)} / ${delta.toFixed(4)}² = ${n.toLocaleString()}<br>
+            <strong>验证：</strong>MDE = ${z.toFixed(3)} × √(${p.toFixed(4)}×${(1-p).toFixed(4)}/${n}) = ${(calcMDE_single(p,n,alpha,power)*100).toFixed(4)}% ✓`;
+    } else {
+        // AB测试：A组固定，计算B组最小样本量
+        // 先从页面配置获取A组总样本量
+        const pages = getSelectedPages(1);
+        let totalN1 = 0; // A组总样本量（用户填写）
+        let totalN2Min = 0; // B组最小样本量（计算）
+        
+        if (pages.length > 0 && pages.some(pg => pg.n1 > 0)) {
+            // 有页面配置，按页面计算
+            for (const pg of pages) {
+                if (pg.n1 > 0) {
+                    totalN1 += pg.n1;
+                    const pageDelta = delta / pg.w;
+                    const targetVar = (pageDelta / z) * (pageDelta / z);
+                    const var1 = pg.p1 * (1 - pg.p1);
+                    const var2 = pg.p2 * (1 - pg.p2);
+                    const remainingVar = targetVar - var1 / pg.n1;
+                    if (remainingVar > 0) {
+                        totalN2Min += Math.ceil(var2 / remainingVar);
+                    } else {
+                        totalN2Min += 30;
+                    }
                 }
-            } else if (validPages.length > 0) {
-                totalSE = calcWeightedSE(validPages);
-                const seMultiplier = currentScenario==='ab-test' ? Math.sqrt(2) : 1;
-                totalPrecision = (zAlpha+zBeta) * seMultiplier * totalSE;
-                totalCI90 = Z_VALUES[0.90] * totalSE;
-                totalCI95 = Z_VALUES[0.95] * totalSE;
-                totalCI99 = Z_VALUES[0.99] * totalSE;
-                validPages.forEach(page => {
-                    const pageSE = Math.sqrt(page.p*(1-page.p)/page.n);
-                    const pagePrecision = (zAlpha+zBeta) * seMultiplier * pageSE;
-                    tbody.innerHTML += `<tr><td class="page-name-cell">${page.name} 页</td><td>${page.w.toFixed(2)}</td><td>${(page.p*100).toFixed(1)}%</td><td>${page.n.toLocaleString()}</td><td class="highlight-cell">±${(pagePrecision*100).toFixed(2)}%</td><td>±${(calcCIHalfWidth(page.p,page.n,0.90)*100).toFixed(2)}%</td><td>±${(calcCIHalfWidth(page.p,page.n,0.95)*100).toFixed(2)}%</td><td>±${(calcCIHalfWidth(page.p,page.n,0.99)*100).toFixed(2)}%</td></tr>`;
-                });
-                const seMultiplierText = currentScenario==='ab-test' ? ' × √2' : '';
-                formulaText = `<strong>加权SE公式：</strong>SE<sub>total</sub> = √(Σ w<sub>i</sub>² × p<sub>i</sub>(1-p<sub>i</sub>) / n<sub>i</sub>) = ${(totalSE*100).toFixed(4)}%<br><strong>总体MDE：</strong>δ = (Z<sub>α/2</sub>+Z<sub>β</sub>)${seMultiplierText} × SE<sub>total</sub>`;
-            } else {
-                alert('请输入总样本量或选择并配置页面参数'); return;
             }
-
-            document.getElementById('total-precision').innerHTML = `±${(totalPrecision*100).toFixed(2)}<span class="result-unit">%</span>`;
-            document.getElementById('result-alpha').textContent = alpha;
-            document.getElementById('result-power').textContent = power;
-            document.getElementById('total-ci-grid').innerHTML = `
-                <div class="ci-card"><div class="ci-level">90% 置信区间</div><div class="ci-value">±${(totalCI90*100).toFixed(2)}%</div></div>
-                <div class="ci-card"><div class="ci-level">95% 置信区间</div><div class="ci-value">±${(totalCI95*100).toFixed(2)}%</div></div>
-                <div class="ci-card primary"><div class="ci-level">99% 置信区间</div><div class="ci-value">±${(totalCI99*100).toFixed(2)}%</div></div>`;
-            document.getElementById('formula-display-2').innerHTML = formulaText;
-            document.getElementById('results-precision').classList.add('visible');
+        } else {
+            // 没有页面配置，按1:1计算作为参考
+            const nPerGroup = Math.max(calcN_ab_equal(p, delta, alpha, power), 30);
+            totalN1 = nPerGroup;
+            totalN2Min = nPerGroup;
         }
+        
+        const totalN = totalN1 + totalN2Min;
+        html = `<div class="ab-result-grid">
+            <div class="ab-result-card"><div class="ab-result-label">A 组（固定）</div><div class="ab-result-value">${totalN1.toLocaleString()}</div></div>
+            <div class="ab-result-card"><div class="ab-result-label">B 组（最小）</div><div class="ab-result-value">${totalN2Min.toLocaleString()}</div></div>
+            <div class="ab-result-card highlight"><div class="ab-result-label">总样本量</div><div class="ab-result-value">${totalN.toLocaleString()}</div></div>
+        </div>
+        <div class="result-note" style="text-align:center;">A组固定，B组为达到MDE所需最小样本量。p₁=${(p1*100).toFixed(1)}%, p₂=${(p2*100).toFixed(1)}%, MDE=${(delta*100).toFixed(2)}%</div>`;
+        formula = `<strong>原理：</strong>A组样本量固定，计算B组最小样本量<br>
+            <strong>公式：</strong>n₂ = p₂(1-p₂) / [(δ/Z)² - p₁(1-p₁)/n₁]<br>
+            <strong>其中：</strong>Z = Z<sub>α/2</sub> + Z<sub>β</sub> = ${z.toFixed(3)}`;
+    }
 
-        function resetForm() {
-            ['global-p','global-delta'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('alpha').value = '0.2';
-            document.getElementById('power').value = '0.6';
-            document.getElementById('ratio').value = '1';
-            PAGES.forEach(id => {
-                document.getElementById(`page-${id}`).checked = false;
-                document.getElementById(`config-${id}`).classList.remove('active');
-                ['weight','p','n'].forEach(f => document.getElementById(`${id}-${f}`).value = '');
-            });
-            document.querySelectorAll('#mode-precision-to-sample .preset-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('results-sample').classList.remove('visible');
+    // 页面详情
+    const pagesForTable = getSelectedPages(1);
+    document.getElementById('m1-page-title').style.display = pagesForTable.length ? 'flex' : 'none';
+    document.getElementById('m1-table-container').style.display = pagesForTable.length ? 'block' : 'none';
+    if (pagesForTable.length) {
+        if (scenario === 'ab-test') {
+            document.getElementById('m1-thead').innerHTML = '<tr><th>页面</th><th>权重</th><th>A组 p</th><th>B组 p</th><th>页面 δ</th><th>A组预估样本量(固定)</th><th>B组预估样本量</th><th>B组最小样本量</th><th>B组状态</th></tr>';
+            let tbody = '';
+            for (const pg of pagesForTable) {
+                const pageDelta = delta / pg.w;
+                // A组样本量固定，计算B组需要多少样本量
+                const targetVar = (pageDelta / z) * (pageDelta / z);
+                const var1 = pg.p1 * (1 - pg.p1);
+                const var2 = pg.p2 * (1 - pg.p2);
+                
+                let pageN2Min;
+                if (pg.n1 > 0) {
+                    const remainingVar = targetVar - var1 / pg.n1;
+                    if (remainingVar > 0) {
+                        pageN2Min = Math.max(Math.ceil(var2 / remainingVar), 30);
+                    } else {
+                        pageN2Min = 30; // A组已足够大
+                    }
+                } else {
+                    // 没有填A组样本量，按1:1计算作为参考
+                    pageN2Min = Math.max(Math.ceil(2 * z * z * pg.p2 * (1-pg.p2) / (pageDelta * pageDelta)), 30);
+                }
+                
+                // B组状态：B组预估 vs B组最小
+                const status2 = pg.n2 > 0 ? (pg.n2 >= pageN2Min ? '✓ 充足' : '⚠ 不足') : '--';
+                const statusClass2 = pg.n2 > 0 ? (pg.n2 >= pageN2Min ? 'success-cell' : 'warning-cell') : '';
+                
+                const n1Display = pg.n1 > 0 ? pg.n1.toLocaleString() : '--';
+                const n2Display = pg.n2 > 0 ? pg.n2.toLocaleString() : '--';
+                
+                tbody += `<tr><td>${pg.id} 页</td><td>${pg.w.toFixed(2)}</td><td>${(pg.p1*100).toFixed(1)}%</td><td>${(pg.p2*100).toFixed(1)}%</td><td>${(pageDelta*100).toFixed(2)}%</td><td>${n1Display}</td><td>${n2Display}</td><td class="highlight-cell">${pageN2Min.toLocaleString()}</td><td class="${statusClass2}">${status2}</td></tr>`;
+            }
+            document.getElementById('m1-tbody').innerHTML = tbody;
+        } else {
+            document.getElementById('m1-thead').innerHTML = '<tr><th>页面</th><th>权重</th><th>预期比例 p</th><th>页面 δ</th><th>最小样本量</th><th>预估样本量</th><th>状态</th></tr>';
+            let tbody = '';
+            for (const pg of pagesForTable) {
+                const pageDelta = delta / pg.w;
+                const pageN = Math.max(calcN_single(pg.p, pageDelta, alpha, power), 30);
+                const status = pg.n > 0 ? (pg.n >= pageN ? '✓ 充足' : '⚠ 不足') : '--';
+                const statusClass = pg.n > 0 ? (pg.n >= pageN ? 'success-cell' : 'warning-cell') : '';
+                const nDisplay = pg.n > 0 ? pg.n.toLocaleString() : '--';
+                tbody += `<tr><td>${pg.id} 页</td><td>${pg.w.toFixed(2)}</td><td>${(pg.p*100).toFixed(1)}%</td><td>${(pageDelta*100).toFixed(2)}%</td><td class="highlight-cell">${pageN.toLocaleString()}</td><td>${nDisplay}</td><td class="${statusClass}">${status}</td></tr>`;
+            }
+            document.getElementById('m1-tbody').innerHTML = tbody;
         }
+    }
 
-        function resetForm2() {
-            ['global-p-2','global-n-2'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('alpha-2').value = '0.2';
-            document.getElementById('power-2').value = '0.6';
-            document.getElementById('ratio-2').value = '1';
-            PAGES.forEach(id => {
-                document.getElementById(`page-${id}-2`).checked = false;
-                document.getElementById(`config-${id}-2`).classList.remove('active');
-                ['weight-2','p-2','n-2'].forEach(f => document.getElementById(`${id}-${f}`).value = '');
-            });
-            document.querySelectorAll('#mode-sample-to-precision .preset-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('results-precision').classList.remove('visible');
+    document.getElementById('m1-result-content').innerHTML = html;
+    document.getElementById('m1-formula').innerHTML = formula;
+    document.getElementById('m1-results').classList.add('visible');
+}
+
+// ========== Mode 2: 样本量 → 精度 ==========
+function calcMode2() {
+    let p, p1, p2, n, n1, n2, alpha, power;
+    
+    if (scenario === 'monitoring') {
+        p = (parseFloat(document.getElementById('m2-p').value) || 0) / 100;
+        n = parseInt(document.getElementById('m2-n').value) || 0;
+        alpha = parseFloat(document.getElementById('m2-alpha').value) || 0.2;
+        power = parseFloat(document.getElementById('m2-power').value) || 0.6;
+    } else {
+        p1 = (parseFloat(document.getElementById('m2-ab-p1').value) || 0) / 100;
+        p2 = document.getElementById('m2-sync-p').checked ? p1 : (parseFloat(document.getElementById('m2-ab-p2').value) || 0) / 100;
+        n1 = parseInt(document.getElementById('m2-ab-n1').value) || 0;
+        n2 = parseInt(document.getElementById('m2-ab-n2').value) || 0;
+        alpha = parseFloat(document.getElementById('m2-ab-alpha').value) || 0.2;
+        power = parseFloat(document.getElementById('m2-ab-power').value) || 0.6;
+        p = (p1 + p2) / 2;
+    }
+
+    const pages = getSelectedPages(2);
+    const z = getZ(alpha, power);
+    const za = normInv(1 - alpha/2), zb = normInv(power);
+    let mde, se, html = '', formula = '';
+
+    if (scenario === 'monitoring') {
+        if (pages.length > 0) {
+            // 加权计算
+            se = calcWeightedSE_single(pages);
+            mde = z * se;
+            formula = `<strong>加权SE：</strong>SE = √(Σ wᵢ² × pᵢ(1-pᵢ)/nᵢ) = ${(se*100).toFixed(4)}%<br>
+                <strong>MDE：</strong>δ = Z × SE = ${z.toFixed(3)} × ${(se*100).toFixed(4)}% = ${(mde*100).toFixed(4)}%`;
+        } else if (n > 0) {
+            if (p <= 0 || p >= 1) { alert('请输入有效的 p 值'); return; }
+            se = calcSE_single(p, n);
+            mde = calcMDE_single(p, n, alpha, power);
+            formula = `<strong>SE：</strong>√(p(1-p)/n) = √(${p.toFixed(4)}×${(1-p).toFixed(4)}/${n}) = ${(se*100).toFixed(4)}%<br>
+                <strong>MDE：</strong>δ = Z × SE = ${z.toFixed(3)} × ${(se*100).toFixed(4)}% = ${(mde*100).toFixed(4)}%<br>
+                <strong>验证：</strong>n = Z²×p(1-p)/δ² = ${calcN_single(p, mde, alpha, power).toLocaleString()} ≈ ${n.toLocaleString()} ✓`;
+        } else {
+            alert('请输入样本量或配置页面参数'); return;
         }
+        html = `<div class="result-summary">
+            <div class="result-label">最小可检测效应 (MDE)</div>
+            <div class="result-value">±${(mde*100).toFixed(2)}<span class="result-unit">%</span></div>
+            <div class="result-note">α=${alpha}, Power=${power}</div>
+        </div>`;
+    } else {
+        if (pages.length > 0) {
+            se = calcWeightedSE_ab(pages);
+            mde = z * se;
+            formula = `<strong>加权SE：</strong>SE = √(Σ wᵢ² × [p₁ᵢ(1-p₁ᵢ)/n₁ᵢ + p₂ᵢ(1-p₂ᵢ)/n₂ᵢ]) = ${(se*100).toFixed(4)}%<br>
+                <strong>MDE：</strong>δ = Z × SE = ${z.toFixed(3)} × ${(se*100).toFixed(4)}% = ${(mde*100).toFixed(4)}%`;
+        } else if (n1 > 0 && n2 > 0) {
+            if (p1 <= 0 || p1 >= 1 || p2 <= 0 || p2 >= 1) { alert('请输入有效的 p 值'); return; }
+            se = calcSE_ab(p1, n1, p2, n2);
+            mde = calcMDE_ab(p1, n1, p2, n2, alpha, power);
+            formula = `<strong>SE：</strong>√(p₁(1-p₁)/n₁ + p₂(1-p₂)/n₂)<br>
+                = √(${p1.toFixed(4)}×${(1-p1).toFixed(4)}/${n1} + ${p2.toFixed(4)}×${(1-p2).toFixed(4)}/${n2}) = ${(se*100).toFixed(4)}%<br>
+                <strong>MDE：</strong>δ = Z × SE = ${z.toFixed(3)} × ${(se*100).toFixed(4)}% = ${(mde*100).toFixed(4)}%`;
+        } else {
+            alert('请输入两组样本量或配置页面参数'); return;
+        }
+        html = `<div class="result-summary">
+            <div class="result-label">最小可检测效应 (MDE)</div>
+            <div class="result-value">±${(mde*100).toFixed(2)}<span class="result-unit">%</span></div>
+            <div class="result-note">A组: ${n1||'加权'}, B组: ${n2||'加权'}, α=${alpha}, Power=${power}</div>
+        </div>`;
+    }
 
-        document.addEventListener('DOMContentLoaded', function() { initPageConfigs(); updateInfoBoxes(); });
-    </script>
+    // CI Grid
+    const ci90 = calcCI(se, 0.90), ci95 = calcCI(se, 0.95), ci99 = calcCI(se, 0.99);
+    document.getElementById('m2-ci-grid').innerHTML = `
+        <div class="ci-card"><div class="ci-level">90% CI</div><div class="ci-value">±${(ci90*100).toFixed(2)}%</div></div>
+        <div class="ci-card"><div class="ci-level">95% CI</div><div class="ci-value">±${(ci95*100).toFixed(2)}%</div></div>
+        <div class="ci-card primary"><div class="ci-level">99% CI</div><div class="ci-value">±${(ci99*100).toFixed(2)}%</div></div>`;
+
+    // 页面详情
+    document.getElementById('m2-page-title').style.display = pages.length ? 'flex' : 'none';
+    document.getElementById('m2-table-container').style.display = pages.length ? 'block' : 'none';
+    if (pages.length) {
+        if (scenario === 'ab-test') {
+            document.getElementById('m2-thead').innerHTML = '<tr><th>页面</th><th>权重</th><th>A组预期比例 p</th><th>A组样本量 n</th><th>B组预期比例 p</th><th>B组样本量 n</th><th>页面MDE</th></tr>';
+            let tbody = '';
+            for (const pg of pages) {
+                const pgSE = Math.sqrt(pg.p1*(1-pg.p1)/pg.n1 + pg.p2*(1-pg.p2)/pg.n2);
+                const pgMDE = z * pgSE;
+                tbody += `<tr><td>${pg.id} 页</td><td>${pg.w.toFixed(2)}</td><td>${(pg.p1*100).toFixed(1)}%</td><td>${pg.n1.toLocaleString()}</td><td>${(pg.p2*100).toFixed(1)}%</td><td>${pg.n2.toLocaleString()}</td><td class="highlight-cell">±${(pgMDE*100).toFixed(2)}%</td></tr>`;
+            }
+            document.getElementById('m2-tbody').innerHTML = tbody;
+        } else {
+            document.getElementById('m2-thead').innerHTML = '<tr><th>页面</th><th>权重</th><th>预期比例 p</th><th>样本量 n</th><th>页面MDE</th><th>90%CI</th><th>95%CI</th><th>99%CI</th></tr>';
+            let tbody = '';
+            for (const pg of pages) {
+                const pgMDE = calcMDE_single(pg.p, pg.n, alpha, power);
+                tbody += `<tr><td>${pg.id} 页</td><td>${pg.w.toFixed(2)}</td><td>${(pg.p*100).toFixed(1)}%</td><td>${pg.n.toLocaleString()}</td><td class="highlight-cell">±${(pgMDE*100).toFixed(2)}%</td><td>±${(calcCI(calcSE_single(pg.p,pg.n),0.90)*100).toFixed(2)}%</td><td>±${(calcCI(calcSE_single(pg.p,pg.n),0.95)*100).toFixed(2)}%</td><td>±${(calcCI(calcSE_single(pg.p,pg.n),0.99)*100).toFixed(2)}%</td></tr>`;
+            }
+            document.getElementById('m2-tbody').innerHTML = tbody;
+        }
+    }
+
+    document.getElementById('m2-result-content').innerHTML = html;
+    document.getElementById('m2-formula').innerHTML = formula;
+    document.getElementById('m2-results').classList.add('visible');
+}
+
+function resetMode(mode) {
+    if (mode === 1) {
+        ['m1-p', 'm1-delta', 'm1-ab-p1', 'm1-ab-p2', 'm1-ab-delta'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        ['m1-alpha', 'm1-ab-alpha'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '0.2'; });
+        ['m1-power', 'm1-ab-power'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '0.6'; });
+    } else {
+        ['m2-p', 'm2-n', 'm2-ab-p1', 'm2-ab-p2', 'm2-ab-n1', 'm2-ab-n2'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        ['m2-alpha', 'm2-ab-alpha'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '0.2'; });
+        ['m2-power', 'm2-ab-power'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '0.6'; });
+    }
+    PAGES.forEach(p => {
+        document.getElementById(`m${mode}-pg-${p}`).checked = false;
+        document.getElementById(`m${mode}-cfg-${p}`).classList.remove('active');
+    });
+    document.getElementById(`m${mode}-results`).classList.remove('visible');
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => { updateInfoBoxes(); initPageConfigs(); });
+</script>
 </body>
 </html>
