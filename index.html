@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>最小样本量计算器</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KVLVZCEG29"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KVLVZCEG29');
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -519,36 +527,24 @@
     </div>
 
 <script>
-/******************************************************************************
- * 统计公式说明
- * 
- * 【长期观测 - 配对样本】
- * 同一群体跨周期比较
- * SE = √(p(1-p)/n)
- * MDE = Z × SE，其中 Z = Z_α/2 + Z_β
- * n = Z² × p(1-p) / δ²
- * 
- * 【AB测试 - 独立双样本】
- * 两个独立群体比较
- * SE = √(pA(1-pA)/nA + pB(1-pB)/nB)
- * MDE = Z × SE
- * 
- * Mode1: 给定nA，计算nB
- * 目标：(δ/Z)² = VarA/nA + VarB/nB
- * 推导：nB = VarB / [(δ/Z)² - VarA/nA]
- * 
- * 【页面加权 SE】
- * 长期观测：SE = √(Σ wᵢ² × pᵢ(1-pᵢ) / nᵢ)
- * AB测试：SE = √(Σ wᵢ² × [pAᵢ(1-pAᵢ)/nAᵢ + pBᵢ(1-pBᵢ)/nBᵢ])
- ******************************************************************************/
-
 let scenario = 'monitoring';
 const PAGES = ['L', 'D', 'B', 'O', 'M'];
 const PAGE_NAMES = { L: 'List 列表页', D: 'Detail 详情页', B: 'Booking 预订页', O: 'Order 订单页', M: 'Message 订后短信' };
 const Z_CI = { 0.90: 1.645, 0.95: 1.960, 0.99: 2.576 };
 const MIN_SAMPLE = 200;
 
-// 正态逆函数
+// GA 事件追踪函数
+function trackEvent(action, mode) {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', action, {
+            'event_category': 'calculator',
+            'event_label': scenario + '_' + mode,
+            'scenario': scenario,
+            'mode': mode
+        });
+    }
+}
+
 function normInv(p) {
     if (p <= 0 || p >= 1) return p <= 0 ? -Infinity : Infinity;
     const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
@@ -572,47 +568,35 @@ function normInv(p) {
 function getZ(alpha, power) { return normInv(1 - alpha/2) + normInv(power); }
 function variance(p) { return p * (1 - p); }
 
-// ========== 核心计算函数 ==========
-
-/** 长期观测：计算样本量 */
 function calcN_single(p, delta, alpha, power) {
     const z = getZ(alpha, power);
     return Math.max(Math.ceil(z * z * variance(p) / (delta * delta)), MIN_SAMPLE);
 }
 
-/** 长期观测：计算MDE */
 function calcMDE_single(p, n, alpha, power) {
     const z = getZ(alpha, power);
     return z * Math.sqrt(variance(p) / n);
 }
 
-/** AB测试：给定nA，计算nB */
 function calcNB_given_nA(pA, nA, pB, delta, alpha, power) {
     const z = getZ(alpha, power);
-    const targetSE2 = Math.pow(delta / z, 2);  // 目标SE²
+    const targetSE2 = Math.pow(delta / z, 2);
     const varA = variance(pA);
     const varB = variance(pB);
     const remaining = targetSE2 - varA / nA;
-    
-    if (remaining <= 0) {
-        // A组样本量不够大，无法达到目标MDE
-        return { nB: MIN_SAMPLE, warning: true };
-    }
+    if (remaining <= 0) return { nB: MIN_SAMPLE, warning: true };
     return { nB: Math.max(Math.ceil(varB / remaining), MIN_SAMPLE), warning: false };
 }
 
-/** AB测试：计算MDE */
 function calcMDE_ab(pA, nA, pB, nB, alpha, power) {
     const z = getZ(alpha, power);
     const se = Math.sqrt(variance(pA)/nA + variance(pB)/nB);
     return z * se;
 }
 
-/** 计算SE */
 function calcSE_single(p, n) { return Math.sqrt(variance(p) / n); }
 function calcSE_ab(pA, nA, pB, nB) { return Math.sqrt(variance(pA)/nA + variance(pB)/nB); }
 
-/** 加权SE */
 function calcWeightedSE_single(pages) {
     return Math.sqrt(pages.reduce((sum, pg) => sum + pg.w * pg.w * variance(pg.p) / pg.n, 0));
 }
@@ -622,10 +606,7 @@ function calcWeightedSE_ab(pages) {
     }, 0));
 }
 
-/** CI半宽 */
 function calcCI(se, conf) { return Z_CI[conf] * se; }
-
-// ========== UI 函数 ==========
 
 function switchScenario(s) {
     scenario = s;
@@ -637,7 +618,6 @@ function switchScenario(s) {
     document.getElementById('scenario-badge').className = 'scenario-badge ' + (s === 'ab-test' ? 'ab-test' : 'monitoring');
     document.getElementById('scenario-badge').textContent = s === 'ab-test' ? '🧪 独立双样本' : '📈 配对样本';
     
-    // 切换输入区
     document.getElementById('m1-monitoring').style.display = s === 'monitoring' ? 'block' : 'none';
     document.getElementById('m1-ab').style.display = s === 'ab-test' ? 'block' : 'none';
     document.getElementById('m2-monitoring').style.display = s === 'monitoring' ? 'block' : 'none';
@@ -659,12 +639,9 @@ function updateInfoBoxes() {
     const m1 = document.getElementById('m1-info'), m2 = document.getElementById('m2-info');
     if (scenario === 'ab-test') {
         m1.className = 'info-box ab-test';
-        m1.innerHTML = `<strong>💡 AB测试公式：</strong><br>
-            SE = √(VarA/nA + VarB/nB)，MDE = Z × SE<br>
-            给定 nA，求 nB = VarB / [(δ/Z)² - VarA/nA]`;
+        m1.innerHTML = `<strong>💡 AB测试公式：</strong><br>SE = √(VarA/nA + VarB/nB)，MDE = Z × SE<br>给定 nA，求 nB = VarB / [(δ/Z)² - VarA/nA]`;
         m2.className = 'info-box ab-test';
-        m2.innerHTML = `<strong>💡 AB测试公式：</strong><br>
-            MDE = Z × √(pA(1-pA)/nA + pB(1-pB)/nB)`;
+        m2.innerHTML = `<strong>💡 AB测试公式：</strong><br>MDE = Z × √(pA(1-pA)/nA + pB(1-pB)/nB)`;
     } else {
         m1.className = 'info-box';
         m1.innerHTML = '<strong>💡 长期观测公式：</strong>n = Z²×p(1-p)/δ²，其中 Z = Z<sub>α/2</sub> + Z<sub>β</sub><br><strong>说明：</strong>配对样本（同一群体跨周期），单组样本量。';
@@ -673,7 +650,6 @@ function updateInfoBoxes() {
     }
 }
 
-// 页面配置生成
 function initPageConfigs() {
     for (let mode = 1; mode <= 2; mode++) {
         const gridHtml = PAGES.map(p => `<div><input type="checkbox" id="m${mode}-pg-${p}" class="page-checkbox" onchange="togglePage(${mode},'${p}')"><label for="m${mode}-pg-${p}" class="page-label">${p}<span class="page-full-name">${PAGE_NAMES[p]}</span></label></div>`).join('');
@@ -683,7 +659,6 @@ function initPageConfigs() {
         for (const p of PAGES) {
             if (scenario === 'ab-test') {
                 if (mode === 1) {
-                    // Mode1 AB: 权重w, 比例pA, 样本量nA, 比例pB (nB由计算得出)
                     configHtml += `<div class="page-config" id="m${mode}-cfg-${p}">
                         <div class="page-config-header"><span class="page-badge ${p}">${p}</span><span style="color:var(--text-secondary)">${PAGE_NAMES[p]}</span></div>
                         <div class="form-grid" style="grid-template-columns:repeat(4,1fr);">
@@ -695,7 +670,6 @@ function initPageConfigs() {
                         <div class="checkbox-row"><input type="checkbox" id="m${mode}-${p}-sync" checked onchange="syncPageP(${mode},'${p}')"><label for="m${mode}-${p}-sync">A/B组预期比例相同</label></div>
                     </div>`;
                 } else {
-                    // Mode2 AB: 权重w, 比例pA, 样本量nA, 比例pB, 样本量nB
                     configHtml += `<div class="page-config" id="m${mode}-cfg-${p}">
                         <div class="page-config-header"><span class="page-badge ${p}">${p}</span><span style="color:var(--text-secondary)">${PAGE_NAMES[p]}</span></div>
                         <div class="form-grid" style="grid-template-columns:repeat(5,1fr);">
@@ -709,7 +683,6 @@ function initPageConfigs() {
                     </div>`;
                 }
             } else {
-                // 长期观测：单组输入
                 const nLabel = mode === 1 ? '预估样本量 n' : '实际样本量 n';
                 configHtml += `<div class="page-config" id="m${mode}-cfg-${p}">
                     <div class="page-config-header"><span class="page-badge ${p}">${p}</span><span style="color:var(--text-secondary)">${PAGE_NAMES[p]}</span></div>
@@ -748,16 +721,13 @@ function syncPageP(mode, p) {
     }
 }
 
-// 同步全局p值
 document.addEventListener('input', e => {
-    // 全局AB测试p值同步
     if (e.target.id === 'm1-ab-pA' && document.getElementById('m1-ab-sync-p').checked) {
         document.getElementById('m1-ab-pB').value = e.target.value;
     }
     if (e.target.id === 'm2-ab-pA' && document.getElementById('m2-ab-sync-p').checked) {
         document.getElementById('m2-ab-pB').value = e.target.value;
     }
-    // 页面级同步
     for (const p of PAGES) {
         for (const mode of [1, 2]) {
             const syncEl = document.getElementById(`m${mode}-${p}-sync`);
@@ -783,19 +753,12 @@ function getSelectedPages(mode) {
             const nA = parseInt(document.getElementById(`m${mode}-${p}-nA`).value) || 0;
             
             if (mode === 1) {
-                // Mode1: 只需要 w, pA, nA, pB
-                if (w > 0 && pA > 0 && pB > 0) {
-                    pages.push({ id: p, w, pA, pB, nA });
-                }
+                if (w > 0 && pA > 0 && pB > 0) pages.push({ id: p, w, pA, pB, nA });
             } else {
-                // Mode2: 需要 w, pA, nA, pB, nB
                 const nB = parseInt(document.getElementById(`m${mode}-${p}-nB`).value) || 0;
-                if (w > 0 && pA > 0 && pB > 0 && nA > 0 && nB > 0) {
-                    pages.push({ id: p, w, pA, pB, nA, nB });
-                }
+                if (w > 0 && pA > 0 && pB > 0 && nA > 0 && nB > 0) pages.push({ id: p, w, pA, pB, nA, nB });
             }
         } else {
-            // 长期观测：单组输入
             const pVal = (parseFloat(document.getElementById(`m${mode}-${p}-p`).value) || 0) / 100;
             const n = parseInt(document.getElementById(`m${mode}-${p}-n`).value) || 0;
             if (w > 0 && pVal > 0) pages.push({ id: p, w, p: pVal, n });
@@ -804,12 +767,10 @@ function getSelectedPages(mode) {
     return pages;
 }
 
-// ========== Mode 1: 精度 → 样本量 ==========
 function calcMode1() {
     let html = '', formula = '';
     
     if (scenario === 'monitoring') {
-        // === 长期观测 ===
         const p = (parseFloat(document.getElementById('m1-p').value) || 0) / 100;
         const delta = (parseFloat(document.getElementById('m1-delta').value) || 0) / 100;
         const alpha = parseFloat(document.getElementById('m1-alpha').value) || 0.2;
@@ -834,11 +795,9 @@ function calcMode1() {
             <strong>计算：</strong>n = ${z.toFixed(3)}² × ${p.toFixed(4)} × ${(1-p).toFixed(4)} / ${delta.toFixed(4)}² = ${n.toLocaleString()}<br>
             <strong>验证：</strong>MDE = ${z.toFixed(3)} × √(${p.toFixed(4)}×${(1-p).toFixed(4)}/${n}) = ${(verifyMDE*100).toFixed(4)}%`;
         
-        // 页面详情
         renderMode1PageTable_Monitoring(alpha, power, delta);
         
     } else {
-        // === AB测试 ===
         const delta = (parseFloat(document.getElementById('m1-ab-delta').value) || 0) / 100;
         let pA = (parseFloat(document.getElementById('m1-ab-pA').value) || 0) / 100;
         let pB = document.getElementById('m1-ab-sync-p').checked ? pA : (parseFloat(document.getElementById('m1-ab-pB').value) || 0) / 100;
@@ -853,12 +812,9 @@ function calcMode1() {
         const z = getZ(alpha, power);
         const za = normInv(1 - alpha/2), zb = normInv(power);
         
-        // 计算nB
         const result = calcNB_given_nA(pA, nA, pB, delta, alpha, power);
         const nB = result.nB;
         const totalN = nA + nB;
-        
-        // 验证实际MDE
         const actualMDE = calcMDE_ab(pA, nA, pB, nB, alpha, power);
         
         let warningNote = '';
@@ -891,13 +847,15 @@ function calcMode1() {
             &nbsp;&nbsp;nB = ${varB.toFixed(4)} / ${remaining.toFixed(8)} = ${nB.toLocaleString()}<br>
             <strong>验证：</strong>MDE = ${z.toFixed(3)} × √(${varA.toFixed(4)}/${nA} + ${varB.toFixed(4)}/${nB}) = ${(actualMDE*100).toFixed(4)}%`;
         
-        // 页面详情
         renderMode1PageTable_AB(alpha, power, delta);
     }
 
     document.getElementById('m1-result-content').innerHTML = html;
     document.getElementById('m1-formula').innerHTML = formula;
     document.getElementById('m1-results').classList.add('visible');
+    
+    // GA 追踪
+    trackEvent('calculate', 'mode1');
 }
 
 function renderMode1PageTable_Monitoring(alpha, power, delta) {
@@ -935,26 +893,21 @@ function renderMode1PageTable_AB(alpha, power, delta) {
     let tbody = '';
     for (const pg of pages) {
         const pageDelta = delta / pg.w;
-        
-        // 计算该页面所需的nB
         let pageNB = MIN_SAMPLE;
         if (pg.nA > 0) {
             const result = calcNB_given_nA(pg.pA, pg.nA, pg.pB, pageDelta, alpha, power);
             pageNB = result.nB;
         }
-        
         const nADisplay = pg.nA > 0 ? pg.nA.toLocaleString() : '--';
         tbody += `<tr><td>${pg.id}页</td><td>${pg.w.toFixed(3)}</td><td>${(pageDelta*100).toFixed(2)}%</td><td>${(pg.pA*100).toFixed(1)}%</td><td>${(pg.pB*100).toFixed(1)}%</td><td>${nADisplay}</td><td class="highlight-cell">${pageNB.toLocaleString()}</td></tr>`;
     }
     document.getElementById('m1-tbody').innerHTML = tbody;
 }
 
-// ========== Mode 2: 样本量 → 精度 ==========
 function calcMode2() {
     let mde, se, html = '', formula = '';
     
     if (scenario === 'monitoring') {
-        // === 长期观测 ===
         const p = (parseFloat(document.getElementById('m2-p').value) || 0) / 100;
         const n = parseInt(document.getElementById('m2-n').value) || 0;
         const alpha = parseFloat(document.getElementById('m2-alpha').value) || 0.2;
@@ -964,7 +917,6 @@ function calcMode2() {
         const z = getZ(alpha, power);
 
         if (pages.length > 0 && pages.every(pg => pg.n > 0)) {
-            // 加权计算
             se = calcWeightedSE_single(pages);
             mde = z * se;
             formula = `<strong>加权SE：</strong>SE = √(Σ wᵢ² × pᵢ(1-pᵢ)/nᵢ) = ${(se*100).toFixed(4)}%<br>
@@ -973,7 +925,6 @@ function calcMode2() {
             if (p <= 0 || p >= 1) { alert('请输入有效的 p 值'); return; }
             se = calcSE_single(p, n);
             mde = calcMDE_single(p, n, alpha, power);
-            
             const verifyN = calcN_single(p, mde, alpha, power);
             formula = `<strong>SE：</strong>√(p(1-p)/n) = √(${(p*(1-p)).toFixed(4)}/${n}) = ${(se*100).toFixed(4)}%<br>
                 <strong>MDE：</strong>δ = Z × SE = ${z.toFixed(3)} × ${(se*100).toFixed(4)}% = ${(mde*100).toFixed(4)}%<br>
@@ -988,11 +939,9 @@ function calcMode2() {
             <div class="result-note">α=${alpha}, Power=${power}</div>
         </div>`;
         
-        // 页面详情
         renderMode2PageTable_Monitoring(pages, alpha, power);
         
     } else {
-        // === AB测试 ===
         let pA = (parseFloat(document.getElementById('m2-ab-pA').value) || 0) / 100;
         let pB = document.getElementById('m2-ab-sync-p').checked ? pA : (parseFloat(document.getElementById('m2-ab-pB').value) || 0) / 100;
         const nA = parseInt(document.getElementById('m2-ab-nA').value) || 0;
@@ -1004,7 +953,6 @@ function calcMode2() {
         const z = getZ(alpha, power);
 
         if (pages.length > 0) {
-            // 加权计算
             se = calcWeightedSE_ab(pages);
             mde = z * se;
             formula = `<strong>加权SE：</strong>SE = √(Σ wᵢ² × [pAᵢ(1-pAᵢ)/nAᵢ + pBᵢ(1-pBᵢ)/nBᵢ]) = ${(se*100).toFixed(4)}%<br>
@@ -1026,11 +974,9 @@ function calcMode2() {
             <div class="result-note">nA=${nA||'加权'}, nB=${nB||'加权'}, α=${alpha}, Power=${power}</div>
         </div>`;
         
-        // 页面详情
         renderMode2PageTable_AB(pages, alpha, power);
     }
 
-    // CI Grid
     const ci90 = calcCI(se, 0.90), ci95 = calcCI(se, 0.95), ci99 = calcCI(se, 0.99);
     document.getElementById('m2-ci-grid').innerHTML = `
         <div class="ci-card"><div class="ci-level">90% CI</div><div class="ci-value">±${(ci90*100).toFixed(2)}%</div></div>
@@ -1040,6 +986,9 @@ function calcMode2() {
     document.getElementById('m2-result-content').innerHTML = html;
     document.getElementById('m2-formula').innerHTML = formula;
     document.getElementById('m2-results').classList.add('visible');
+    
+    // GA 追踪
+    trackEvent('calculate', 'mode2');
 }
 
 function renderMode2PageTable_Monitoring(pages, alpha, power) {
@@ -1095,7 +1044,6 @@ function resetMode(mode) {
     document.getElementById(`m${mode}-results`).classList.remove('visible');
 }
 
-// 初始化
 document.addEventListener('DOMContentLoaded', () => { updateInfoBoxes(); initPageConfigs(); });
 </script>
 </body>
