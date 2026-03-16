@@ -246,5 +246,3 @@ n ≥ 200
 
 URS Data Science Team © 2026
 
-It would make the repo look **10× more professional**.
-
